@@ -20,11 +20,11 @@ func executeInit() error {
 		return errors.New("repository already exists")
 	}
 
-    if err := utils.CreateDirs(rootDirName, objectsDirName); err != nil {
-        return err
-    }
+	if err := utils.CreateDirs(rootDirName, objectsDirName); err != nil {
+		return err
+	}
 
-    fmt.Println("Initialized empty vcs-go repository")
-        
+	fmt.Println("Initialized empty vcs-go repository")
+
 	return nil
 }
