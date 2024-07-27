@@ -4,6 +4,10 @@ import (
 	"os"
 )
 
+type Blob struct {
+    Bytes []byte
+}
+
 func CheckPathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -29,3 +33,18 @@ func CreateDirs(paths ...string) error {
 func CreateOneDir(path string) error {
     return os.MkdirAll(path, os.ModePerm)
 }
+
+func FileToStruct(path string) (Blob, error) {
+	// Read the file to be serialized
+	readBytes, err := os.ReadFile("./test.txt")
+	if err != nil {
+        return Blob{}, err
+	}
+
+    blob := Blob{Bytes: readBytes}
+
+    return blob, nil
+
+}
+
+    
