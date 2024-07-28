@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func TestGetDirs(t *testing.T) {
-    dirs, err := GetDirs("../..")
+func TestGetFiles(t *testing.T) {
+    dirs, err := GetFiles("../..")
     if err != nil {
         t.Error("Error occur while getting directories")
     }

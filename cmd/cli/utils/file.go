@@ -29,7 +29,7 @@ func CreateDirs(paths ...string) error {
 	return nil
 }
 
-func GetDirs(path string) ([]string, error) {
+func GetFiles(path string) ([]string, error) {
 
 	var fileNames []string
 
