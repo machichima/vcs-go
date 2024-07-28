@@ -5,6 +5,18 @@ import (
 	"testing"
 )
 
+func TestGetDirs(t *testing.T) {
+    dirs, err := GetDirs("../..")
+    if err != nil {
+        t.Error("Error occur while getting directories")
+    }
+
+    if len(dirs) == 0 {
+        t.Error("No directories found")
+    }
+}
+
+
 func TestFileToStruct(t *testing.T) {
 
     blob, err := FileToStruct("./test.txt")
