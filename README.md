@@ -70,9 +70,12 @@
     - [x] create .vcsgo folder with empty structures inside
     - [x] Detect if .vcsgo folder already exists
 - [ ] Serialization
-   - [ ] files into blob
-   - [ ] file tree into blob
-   - [ ] commit into blob
+    - [x] files into blob
+        - [ ] Hash the file blob
+    - [ ] file tree into blob
+        - [x] Get file with directory structure
+        - [ ] hashmap for file dir structure to SHA-1 hash of the file
+    - [ ] commit into blob
 - [ ] SHA-1 hashing function
     - [ ] Hash from serialized objects -> get hash string
     - [ ] Store hash string in .vcsgo/objects
@@ -82,3 +85,10 @@
 - [ ] checkout
 - [ ] rm
 - [ ] branch operation...
+
+
+## Work Log
+
+### 27/07/2024
+- [x] Finish Serialization function for the file contents
+- [x] Get the files with their directory structure
