@@ -43,6 +43,8 @@
 └── testfolder
 ```
 
+Test for each file are included in the same folder as the file itself.
+
 - `utils`: tool functions
 - `commands`: each commands shown in [Introduction](##Introduction) has its own folder
 
@@ -63,6 +65,20 @@
                 main  # Pointer to the latest commit on the main branch
         HEAD  # Pointer to the current commit checked out
 ```
+
+## Usage
+
+### Test
+
+- Go to the folder of the file you want to test, run following:
+```{sh}
+go test
+```
+To see more details of the test, run:
+```{sh}
+go test -v
+```
+
 
 ## TODO
 
