@@ -1,22 +1,47 @@
 package utils
 
 import (
-    "bytes"
-    "encoding/gob"
+    "fmt"
+	"bytes"
+	"encoding/gob"
 )
 
 type TestData struct {
-    Num int
-    Str string
+    Content string
 }
 
-func Serialize(data interface{}) ([]byte, error) {
+func Serialize(data Blob, buffer *bytes.Buffer) error {
+    fmt.Printf("Buffer addr in Serialize: %p\n", buffer)
 
-    var b bytes.Buffer
+	encoder := gob.NewEncoder(buffer)
+	err := encoder.Encode(data)
 
-    encoder := gob.NewEncoder(&b)
-    err := encoder.Encode(data)
 
-    serializedData := b.Bytes()
-    return serializedData, err
+	return err
+}
+
+func Deserialize(buffer *bytes.Buffer) ([]byte, error) {
+
+    fmt.Printf("Buffer addr in Deserialize: %p\n", buffer)
+
+	// var b bytes.Buffer
+    var b Blob
+ 
+	decoder := gob.NewDecoder(buffer)
+
+    fmt.Println("Bytes to be serialized: ")
+    fmt.Println(*buffer)
+
+	for {
+        err := decoder.Decode(&b)
+		if err != nil {
+			fmt.Println("Error in decoder", err)
+			break
+		}
+	}
+
+    fmt.Println("Decoded bytes", string(b.Bytes))
+
+	// decodedData := b.Bytes()
+	return b.Bytes, nil
 }
