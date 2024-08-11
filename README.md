@@ -87,7 +87,8 @@ go test -v
     - [x] Detect if .vcsgo folder already exists
 - [ ] Serialization
     - [x] files into blob
-        - [ ] Hash the file blob
+    - [x] Serialize the file blob and deserialize
+    - [ ] Hash the file blob
     - [ ] file tree into blob
         - [x] Get file with directory structure
         - [ ] hashmap for file dir structure to SHA-1 hash of the file
