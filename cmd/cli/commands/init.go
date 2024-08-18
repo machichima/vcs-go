@@ -24,7 +24,7 @@ func executeInit() error {
 		return err
 	}
 
-	fmt.Println("Initialized empty vcs-go repository")
+	// fmt.Println("Initialized empty vcs-go repository")
 
 	return nil
 }

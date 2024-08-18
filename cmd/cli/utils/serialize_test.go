@@ -1,7 +1,6 @@
 package utils
 
 import (
-    "fmt"
 	"bytes"
 	"reflect"
 	"testing"
@@ -38,7 +37,7 @@ func TestDeserialize(t *testing.T) {
     }
 
 	var buffer bytes.Buffer
-    fmt.Printf("Buffer addr in TestDeserialize: %p\n", &buffer)
+    // fmt.Printf("Buffer addr in TestDeserialize: %p\n", &buffer)
 
 	serializeErr := Serialize(blob, &buffer)
 	if serializeErr != nil {
@@ -50,7 +49,7 @@ func TestDeserialize(t *testing.T) {
 		t.Errorf("Error deserializing data with error %v", err)
 	}
 
-    t.Logf("Decoded bytes string %v", string(decodedBytes))
+    // t.Logf("Decoded bytes string %v", string(decodedBytes))
 
     if reflect.TypeOf(decodedBytes) != reflect.TypeOf([]byte{}) {
         t.Error("Error deserializing data")

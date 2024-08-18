@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"os"
 )
 
@@ -49,7 +48,6 @@ func GetFiles(path string) ([]string, error) {
 		}
 		for _, dir := range dirs {
 			if dir.IsDir() {
-				fmt.Println(dir.Name())
 				queue = append(queue, path+"/"+dir.Name())
 			} else {
 				fileNames = append(fileNames, path+"/"+dir.Name())
@@ -57,7 +55,7 @@ func GetFiles(path string) ([]string, error) {
 		}
 	}
 
-	fmt.Println(fileNames)
+	// fmt.Println(fileNames)
 
 	return fileNames, nil
 }

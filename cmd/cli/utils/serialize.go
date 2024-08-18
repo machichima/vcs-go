@@ -11,7 +11,7 @@ type TestData struct {
 }
 
 func Serialize(data Blob, buffer *bytes.Buffer) error {
-    fmt.Printf("Buffer addr in Serialize: %p\n", buffer)
+    // fmt.Printf("Buffer addr in Serialize: %p\n", buffer)
 
 	encoder := gob.NewEncoder(buffer)
 	err := encoder.Encode(data)
@@ -22,15 +22,15 @@ func Serialize(data Blob, buffer *bytes.Buffer) error {
 
 func Deserialize(buffer *bytes.Buffer) ([]byte, error) {
 
-    fmt.Printf("Buffer addr in Deserialize: %p\n", buffer)
+    // fmt.Printf("Buffer addr in Deserialize: %p\n", buffer)
 
 	// var b bytes.Buffer
     var b Blob
  
 	decoder := gob.NewDecoder(buffer)
 
-    fmt.Println("Bytes to be serialized: ")
-    fmt.Println(*buffer)
+    // fmt.Println("Bytes to be serialized: ")
+    // fmt.Println(*buffer)
 
 	for {
         err := decoder.Decode(&b)
@@ -40,7 +40,7 @@ func Deserialize(buffer *bytes.Buffer) ([]byte, error) {
 		}
 	}
 
-    fmt.Println("Decoded bytes", string(b.Bytes))
+    // fmt.Println("Decoded bytes", string(b.Bytes))
 
 	// decodedData := b.Bytes()
 	return b.Bytes, nil
