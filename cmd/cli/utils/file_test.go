@@ -28,4 +28,8 @@ func TestFileToStruct(t *testing.T) {
     if reflect.TypeOf(blob) != reflect.TypeOf(utils.Blob{}) {
         t.Errorf("type %v %v mismatch", reflect.TypeOf(blob), reflect.TypeOf(utils.Blob{}))
     }
+
+    if blob.Bytes == nil {
+        t.Error("Bytes is nil")
+    }
 }
