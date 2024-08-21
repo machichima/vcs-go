@@ -62,7 +62,7 @@ func CreateOneDir(path string) error {
 
 func FileToStruct(path string) (Blob, error) {
 	// Read the file to be serialized
-	readBytes, err := os.ReadFile("./test.txt")
+	readBytes, err := os.ReadFile(path)
 	if err != nil {
 		return Blob{}, err
 	}
