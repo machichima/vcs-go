@@ -4,10 +4,6 @@ import (
 	"os"
 )
 
-type Blob struct {
-	Bytes []byte
-}
-
 func CheckPathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
