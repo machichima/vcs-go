@@ -1,12 +1,13 @@
-package utils
+package utils_test
 
 import (
 	"reflect"
 	"testing"
+	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
 
 func TestGetFiles(t *testing.T) {
-    dirs, err := GetFiles("../..")
+    dirs, err := utils.GetFiles("../..")
     if err != nil {
         t.Error("Error occur while getting directories")
     }
@@ -19,12 +20,12 @@ func TestGetFiles(t *testing.T) {
 
 func TestFileToStruct(t *testing.T) {
 
-    blob, err := FileToStruct("./test.txt")
+    blob, err := utils.FileToStruct("./test.txt")
     if err != nil {
         t.Error("Error occur while converting file to struct")
     }
 
-    if reflect.TypeOf(blob) != reflect.TypeOf(Blob{}) {
-        t.Errorf("type %v %v mismatch", reflect.TypeOf(blob), reflect.TypeOf(Blob{}))
+    if reflect.TypeOf(blob) != reflect.TypeOf(utils.Blob{}) {
+        t.Errorf("type %v %v mismatch", reflect.TypeOf(blob), reflect.TypeOf(utils.Blob{}))
     }
 }

@@ -1,16 +1,18 @@
-package utils
+package utils_test
 
 import (
     "fmt"
 	"bytes"
 	"testing"
     "reflect"
+    "github.com/machichima/vcs-go/cmd/cli/utils"
+
 )
 
 func TestHashBlob(t *testing.T) {
 
 	// Read the file content and convert to struct
-    blob, err := FileToStruct("./test.txt")
+    blob, err := utils.FileToStruct("./test.txt")
     if err != nil {
         t.Error("Error occur while converting file to struct")
     }
@@ -18,13 +20,13 @@ func TestHashBlob(t *testing.T) {
     // Serialize the blob
 	var buffer bytes.Buffer
 
-	serializeErr := Serialize(blob, &buffer)
+	serializeErr := utils.Serialize(blob, &buffer)
 	if serializeErr != nil {
 		t.Errorf("Error serializing data with error %v", serializeErr)
 	}
 
     // hash the serialized blob
-    hashBytes, err := HashBlob(buffer.Bytes())
+    hashBytes, err := utils.HashBlob(buffer.Bytes())
     if err != nil {
         t.Error("Error occur while hashing blob")
     }
