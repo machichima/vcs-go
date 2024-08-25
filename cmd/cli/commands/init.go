@@ -2,25 +2,18 @@ package commands
 
 import (
 	"errors"
-	"fmt"
-
 	"github.com/machichima/vcs-go/cmd/cli/utils"
-)
-
-const (
-	rootDirName    = ".vgo"
-	objectsDirName = ".vgo/objects"
 )
 
 func executeInit() error {
 
-	if exists, err := utils.CheckPathExists(rootDirName); err != nil {
+	if exists, err := utils.CheckPathExists(utils.RootDirName); err != nil {
 		return err
 	} else if exists {
 		return errors.New("repository already exists")
 	}
 
-	if err := utils.CreateDirs(rootDirName, objectsDirName); err != nil {
+	if err := utils.CreateDirs(utils.RootDirName, utils.ObjectsDirName); err != nil {
 		return err
 	}
 
