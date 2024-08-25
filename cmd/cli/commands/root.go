@@ -6,12 +6,15 @@ import (
 	"os"
 )
 
+// TODO: take out cli tool and just receive args
+
 func ExecuteCommands() {
 	app := &cli.App{
 		Name:  "vgo",
 		Usage: "vcs-go (vgo) is a simple version control system",
 		Commands: []*cli.Command{
 			InitSubCmd,
+            AddSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -24,5 +27,14 @@ var InitSubCmd = &cli.Command{
 	Usage: "init initializes a new vcs-go repository",
 	Action: func(c *cli.Context) error {
 		return executeInit()
+	},
+}
+
+var AddSubCmd = &cli.Command{
+	Name:  "add",
+	Usage: "stage changed files",
+	Action: func(c *cli.Context) error {
+        filePath := c.Args().First()
+		return executeAdd(filePath)
 	},
 }
