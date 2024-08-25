@@ -73,3 +73,29 @@ func FileToStruct(path string) (Blob, error) {
 	return blob, nil
 
 }
+
+// Save files with hash string as file name
+// and in the folder names the first two characters
+// of the hash
+//
+// e.g. hash1: dfq8hfroihffjlkasj / hash2: df32fjqf81efh1ofj
+// saved in df/dfq8hfroihffjlkasj and df/df32fjqf81efh1ofj file
+func SaveFileByHash(hash string, blob []byte, commandType int) error {
+	// TODO: implement this function
+
+    // create parent dir
+	parentDir := hash[:2]
+    fullObjectsDir := ObjectsDirName + "/" + parentDir
+
+	if err := CreateOneDir(fullObjectsDir); err != nil {
+		return err
+	}
+
+    // write blob to file
+    
+    if err := os.WriteFile(fullObjectsDir + "/" + hash, blob, os.ModePerm); err != nil {
+        return err
+    }
+
+	return nil
+}
