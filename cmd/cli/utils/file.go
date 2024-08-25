@@ -44,9 +44,9 @@ func GetFiles(path string) ([]string, error) {
 		}
 		for _, dir := range dirs {
 			if dir.IsDir() {
-				queue = append(queue, path + dir.Name() + "/")
+				queue = append(queue, path+dir.Name()+"/")
 			} else {
-				fileNames = append(fileNames, path + dir.Name())
+				fileNames = append(fileNames, path+dir.Name())
 			}
 		}
 	}
@@ -56,6 +56,7 @@ func GetFiles(path string) ([]string, error) {
 	return fileNames, nil
 }
 
+// create directory and all parents
 func CreateOneDir(path string) error {
 	return os.MkdirAll(path, os.ModePerm)
 }

@@ -7,6 +7,7 @@ import (
 	"io"
 )
 
+// Hash the blob with sha1
 func HashBlob(blob []byte) (string, error) {
     // Read the file to be hashed
     h := sha1.New()
