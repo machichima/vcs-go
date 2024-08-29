@@ -1,7 +1,12 @@
 package utils
 
+// TODO: add filepath (think whether it is needed?)
 type Blob struct {
 	Bytes []byte
+}
+
+type Index struct {
+    FileToHash map[string]string
 }
 
 const (

@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"io"
 	"os"
+	"path/filepath"
 )
 
 func CheckPathExists(path string) (bool, error) {
@@ -85,19 +87,61 @@ func FileToStruct(path string) (Blob, error) {
 func SaveFileByHash(hash string, blob []byte, commandType int) error {
 	// TODO: implement this function
 
-    // create parent dir
+	// create parent dir
 	parentDir := hash[:2]
-    fullObjectsDir := ObjectsDirName + "/" + parentDir
+	fullObjectsDir := ObjectsDirName + "/" + parentDir
 
 	if err := CreateOneDir(fullObjectsDir); err != nil {
 		return err
 	}
 
-    // write blob to file
-    
-    if err := os.WriteFile(fullObjectsDir + "/" + hash, blob, os.ModePerm); err != nil {
+	// write blob to file
+	if err := os.WriteFile(fullObjectsDir+"/"+hash, blob, os.ModePerm); err != nil {
+		return err
+	}
+
+	if commandType == AddType {
+		// TODO: write file name and hash to index file
+	}
+
+	return nil
+}
+
+
+// TODO: add test (after the test for DeleteObject
+// Add to INDEX file
+func AddToIndex(index *Index, file string, hash string) error {
+    // file already exists in index
+    if index.FileToHash[file] != "" && index.FileToHash[file] != hash {
+        // TODO: delete original objects files
+        if err := DeleteObject(index.FileToHash[file]); err != nil {
+            return err
+        }
+    }
+
+    // update or add file-hash to index
+    index.FileToHash[file] = hash
+
+    return nil
+}
+
+
+// TODO: add test for this
+func DeleteObject(hash string) error {
+    path := filepath.Join(ObjectsDirName, hash[:2], hash)
+    if err := os.Remove(path); err != nil {
         return err
     }
 
-	return nil
+    f, err := os.Open(filepath.Dir(path))
+    if err != nil {
+        return err
+    }
+
+    if _, err := f.ReadDir(1); err == io.EOF {
+        // the foler is empty, delete the folder
+        defer os.Remove(filepath.Dir(path))
+    }
+
+    return nil
 }
