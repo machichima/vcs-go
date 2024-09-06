@@ -32,7 +32,7 @@ func executeAdd(filePath string) error {
 
 		// Serialize the blob
 		var buffer bytes.Buffer
-		if err := utils.Serialize(blobStruct, &buffer); err != nil {
+		if err := utils.SerializeBlob(blobStruct, &buffer); err != nil {
 			return err
 		}
 

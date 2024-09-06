@@ -18,7 +18,7 @@ func TestSerialize(t *testing.T) {
 
 	var buffer bytes.Buffer
 
-	serializeErr := utils.Serialize(blob, &buffer)
+	serializeErr := utils.SerializeBlob(blob, &buffer)
 	if serializeErr != nil {
 		t.Errorf("Error serializing data with error %v", serializeErr)
 	}
@@ -41,12 +41,12 @@ func TestDeserialize(t *testing.T) {
 	var buffer bytes.Buffer
     // fmt.Printf("Buffer addr in TestDeserialize: %p\n", &buffer)
 
-	serializeErr := utils.Serialize(blob, &buffer)
+	serializeErr := utils.SerializeBlob(blob, &buffer)
 	if serializeErr != nil {
 		t.Errorf("Error serializing data with error %v", serializeErr)
 	}
 
-	decodedBytes, err := utils.Deserialize(&buffer)
+	decodedBytes, err := utils.DeserializeBlob(&buffer)
 	if err != nil {
 		t.Errorf("Error deserializing data with error %v", err)
 	}
