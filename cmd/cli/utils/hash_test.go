@@ -1,7 +1,6 @@
 package utils_test
 
 import (
-    "fmt"
 	"bytes"
 	"testing"
     "reflect"
@@ -20,7 +19,7 @@ func TestHashBlob(t *testing.T) {
     // Serialize the blob
 	var buffer bytes.Buffer
 
-	serializeErr := utils.Serialize(blob, &buffer)
+	serializeErr := utils.SerializeBlob(blob, &buffer)
 	if serializeErr != nil {
 		t.Errorf("Error serializing data with error %v", serializeErr)
 	}
@@ -30,8 +29,6 @@ func TestHashBlob(t *testing.T) {
     if err != nil {
         t.Error("Error occur while hashing blob")
     }
-
-    fmt.Printf("Hashed blob: %v\n", hashBytes)
 
     if reflect.TypeOf(hashBytes).Kind() != reflect.String {
         t.Error("Error deserializing data")
