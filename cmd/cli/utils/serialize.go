@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-
-	"golang.org/x/text/width"
 )
 
 type TestData struct {
