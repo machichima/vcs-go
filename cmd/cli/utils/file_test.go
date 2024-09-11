@@ -96,7 +96,8 @@ func TestAddToIndex(t *testing.T) {
 	var index utils.Index
     index.FileToHash = make(map[string]string)
 
-    if err := utils.AddToIndex(&index, "file", hash); err != nil {
+    isNewFile, err := utils.AddToIndex(&index, "file", hash)
+    if err != nil {
         t.Error(err)
     }
 
@@ -104,8 +105,13 @@ func TestAddToIndex(t *testing.T) {
         t.Error("Error adding hash-file pair to index")
     }
 
+    if !isNewFile {
+        t.Error("File added is not the new file")
+    }
+
     // Case 2: object already in INDEX - same hash
-    if err := utils.AddToIndex(&index, "file", hash); err != nil {
+    isNewFile, err = utils.AddToIndex(&index, "file", hash)
+    if err != nil {
         t.Error(err)
     }
 
@@ -113,9 +119,14 @@ func TestAddToIndex(t *testing.T) {
         t.Error("Duplicate identical file-hash pair added")
     }
 
+    if isNewFile {
+        t.Error("File added is not the existing file")
+    }
+
     // Case 2: object already in INDEX - different hash
     newHash := "1tjqwfwajq3j0jg3"
-    if err := utils.AddToIndex(&index, "file", newHash); err != nil {
+    isNewFile, err = utils.AddToIndex(&index, "file", newHash)
+    if err != nil {
         t.Error(err)
     }
 
@@ -131,6 +142,10 @@ func TestAddToIndex(t *testing.T) {
 
     if index.FileToHash["file"] != newHash {
         t.Error("File hash is not updated")
+    }
+
+    if isNewFile {
+        t.Error("File added is not the existing file")
     }
 
 }
@@ -161,10 +176,15 @@ func TestSaveFileByHashCommitType(t *testing.T) {
 		t.Error(err)
 	}
 
-	if err := utils.SaveFileByHash(path, hash, fileByte, utils.CommitType); err != nil {
-		t.Error("Error occur while saving file by hash")
-		t.Error(err)
-	}
+    isNewFile, err := utils.SaveFileByHash(path, hash, fileByte, utils.AddType)
+    if err != nil {
+        t.Error("Error occur while saving file by hash")
+        t.Error(err)
+    }
+
+    if !isNewFile {
+        t.Error("File added is not the new file")
+    }
 
 	// check if the file is saved
 	parentDir := hash[:2]
@@ -209,10 +229,15 @@ func TestSaveFileByHashAddType(t *testing.T) {
 		t.Error(err)
 	}
 
-	if err := utils.SaveFileByHash(path, hash, fileByte, utils.AddType); err != nil {
-		t.Error("Error occur while saving file by hash")
-		t.Error(err)
-	}
+    isNewFile, err := utils.SaveFileByHash(path, hash, fileByte, utils.AddType)
+    if err != nil {
+        t.Error("Error occur while saving file by hash")
+        t.Error(err)
+    }
+
+    if !isNewFile {
+        t.Error("File added is not the new file")
+    }
 
 	// check if the file is saved
 	parentDir := hash[:2]
