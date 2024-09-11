@@ -3,7 +3,8 @@ package commands
 import (
 	// "errors"
 	"bytes"
-	"fmt"
+    "fmt"
+
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
 
@@ -14,15 +15,14 @@ import (
 //  4. put files to objects dir (based on hash)
 func executeAdd(filePath string) error {
 
-    // TODO: distinguish between file and dir (now dir only)
+	// TODO: distinguish between file and dir (now dir only)
 
 	files, err := utils.GetFiles(filePath)
 	if err != nil {
 		return err
 	}
 
-	var hashBlob = make(map[string][]byte)
-	var fileHash = make(map[string]string)
+    var isAddNewFile bool = false
 
 	for _, file := range files {
 		blobStruct, err := utils.FileToStruct(file)
@@ -42,22 +42,19 @@ func executeAdd(filePath string) error {
 			return err
 		}
 
-		// save hash string with blob
-		hashBlob[hashStr] = buffer.Bytes()
-		fileHash[file] = hashStr
+        isNewFile, err := utils.SaveFileByHash(file, hashStr, buffer.Bytes(), utils.AddType)
+        if err != nil {
+            return err
+        }
 
-		if err := utils.SaveFileByHash(hashStr, blobStruct.Bytes, utils.AddType); err != nil {
-			return err
-		}
+        isAddNewFile = isAddNewFile || isNewFile
 	}
 
-	fmt.Println(hashBlob)
-	fmt.Println(fileHash)
-
-	// TODO: save serialized blob to the files using following function
-
-	// TODO: save to .vgo/object dir, and in .vgo/index file write
-	// hash and file name (like the file tree)
+    if isAddNewFile {
+        fmt.Println("Files added successfully")
+    } else {
+        fmt.Println("No new files added")
+    }
 
 	return nil
 }
