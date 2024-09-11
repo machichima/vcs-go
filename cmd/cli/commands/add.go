@@ -3,7 +3,7 @@ package commands
 import (
 	// "errors"
 	"bytes"
-    "fmt"
+	"fmt"
 
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
@@ -22,7 +22,7 @@ func executeAdd(filePath string) error {
 		return err
 	}
 
-    var isAddNewFile bool = false
+	var isAddNewFile bool = false
 
 	for _, file := range files {
 		blobStruct, err := utils.FileToStruct(file)
@@ -42,19 +42,19 @@ func executeAdd(filePath string) error {
 			return err
 		}
 
-        isNewFile, err := utils.SaveFileByHash(file, hashStr, buffer.Bytes(), utils.AddType)
-        if err != nil {
-            return err
-        }
+		isNewFile, err := utils.SaveFileByHash(file, hashStr, buffer.Bytes(), utils.AddType)
+		if err != nil {
+			return err
+		}
 
-        isAddNewFile = isAddNewFile || isNewFile
+		isAddNewFile = isAddNewFile || isNewFile
 	}
 
-    if isAddNewFile {
-        fmt.Println("Files added successfully")
-    } else {
-        fmt.Println("No new files added")
-    }
+	if isAddNewFile {
+		fmt.Println("Files added successfully")
+	} else {
+		fmt.Println("No new files added")
+	}
 
 	return nil
 }
