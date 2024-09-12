@@ -15,6 +15,7 @@ func ExecuteCommands() {
 		Commands: []*cli.Command{
 			InitSubCmd,
             AddSubCmd,
+            StatusSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -36,5 +37,13 @@ var AddSubCmd = &cli.Command{
 	Action: func(c *cli.Context) error {
         filePath := c.Args().First()
 		return executeAdd(filePath)
+	},
+}
+
+var StatusSubCmd = &cli.Command{
+	Name:  "status",
+	Usage: "show the staged files",
+	Action: func(c *cli.Context) error {
+		return executeStatus()
 	},
 }
