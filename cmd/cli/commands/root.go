@@ -1,9 +1,10 @@
 package commands
 
 import (
-	"github.com/urfave/cli/v2" // imports as package "cli"
 	"log"
 	"os"
+
+	"github.com/urfave/cli/v2" // imports as package "cli"
 )
 
 // TODO: take out cli tool and just receive args
@@ -16,6 +17,7 @@ func ExecuteCommands() {
 			InitSubCmd,
             AddSubCmd,
             StatusSubCmd,
+            CommitSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -45,5 +47,21 @@ var StatusSubCmd = &cli.Command{
 	Usage: "show the staged files",
 	Action: func(c *cli.Context) error {
 		return executeStatus()
+	},
+}
+
+var CommitSubCmd = &cli.Command{
+	Name:  "commit",
+	Usage: "commit the staged files",
+    Flags: []cli.Flag {
+        &cli.StringFlag {
+            Name: "message",
+            Aliases: []string{"m"},
+            Usage: "commit message",
+        },
+    },
+	Action: func(c *cli.Context) error {
+        msg := c.String("message")
+		return executeCommit(msg)
 	},
 }

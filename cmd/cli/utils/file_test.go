@@ -315,3 +315,6 @@ func TestWriteReadFileTree(t *testing.T) {
 	}
 
 }
+
+
+// TODO: test for read/write commit
