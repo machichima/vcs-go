@@ -68,6 +68,15 @@ Test for each file are included in the same folder as the file itself.
 
 ## Usage
 
+### Run
+
+- To run the project, run following in the target folder (testfolder for testing our project):
+
+```{sh}
+go run ../cmd/cli/main.go {command}
+
+```
+
 ### Test
 
 - Go to the folder of the file you want to test, run following:
@@ -79,6 +88,11 @@ To see more details of the test, run:
 go test -v
 ```
 
+To test specific function in a module, run:
+```{sh}
+go test github.com/machichima/vcs-go/cmd/cli/utils -v -run function
+```
+
 
 ## TODO
 
@@ -88,15 +102,16 @@ go test -v
 - [ ] Serialization
     - [x] files into blob
     - [x] Serialize the file blob and deserialize
-    - [ ] Hash the file blob
-    - [ ] file tree into blob
+    - [x] Hash the file blob
+    - [x] file tree into blob
         - [x] Get file with directory structure
-        - [ ] hashmap for file dir structure to SHA-1 hash of the file
+        - [x] hashmap for file dir structure to SHA-1 hash of the file
     - [ ] commit into blob
-- [ ] SHA-1 hashing function
-    - [ ] Hash from serialized objects -> get hash string
-    - [ ] Store hash string in .vcsgo/objects
-- [ ] add
+- [x] SHA-1 hashing function
+    - [x] Hash from serialized objects -> get hash string
+    - [x] Store hash string in .vcsgo/objects
+- [x] add
+- [x] status
 - [ ] commit
 - [ ] log
 - [ ] checkout
@@ -105,6 +120,12 @@ go test -v
 
 
 ## Work Log
+
+### 12/09/2024
+- [ ] Finish status command
+
+### Before 12/09/2024
+- [x] Finish the add function
 
 ### 27/07/2024
 - [x] Finish Serialization function for the file contents

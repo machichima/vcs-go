@@ -16,24 +16,28 @@ func executeStatus() error {
 
     index, err := utils.ReadIndexFile()
     if err != nil {
-        if errors.Is(err, os.ErrNotExist) {
-            fmt.Println("No staged changes")
-            return nil
-        } else {
+        if !errors.Is(err, os.ErrNotExist) {
             return err
         }
     }
 
-    if len(index.FileToHash) < 1 {
-        fmt.Println("No staged changes")
-        return nil
-    }
-
-    fmt.Println("Staged files:")
+    fmt.Println("Changes to be committed:")
     for file, _ := range index.FileToHash {
         fmt.Println(file)
     }
 
+    files, err := utils.GetFiles("./")
+    if err != nil {
+        return err
+    }
+
+    fmt.Println("Changes not staged for commit:")
+    for _, file := range files {
+        _, ok := index.FileToHash[file]
+        if !ok {
+            fmt.Println(file)
+        }
+    }
 
     return nil
 }
