@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -15,16 +14,14 @@ import (
 // 3. deserialize the bytes content into Index struct
 func executeStatus() error {
 
-    indexBytes, err := os.ReadFile(utils.IndexDirName)
-    if errors.Is(err, os.ErrNotExist) {
-        fmt.Println("No staged changes")
-        return nil
-    }
-
-    indexBuf := bytes.NewBuffer(indexBytes)
-    index, err := utils.DeserializeIndex(indexBuf)
+    index, err := utils.ReadIndexFile()
     if err != nil {
-        return err
+        if errors.Is(err, os.ErrNotExist) {
+            fmt.Println("No staged changes")
+            return nil
+        } else {
+            return err
+        }
     }
 
     if len(index.FileToHash) < 1 {
