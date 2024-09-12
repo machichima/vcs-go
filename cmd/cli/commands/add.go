@@ -4,6 +4,7 @@ import (
 	// "errors"
 	"bytes"
 	"fmt"
+	"os"
 
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
@@ -17,10 +18,20 @@ func executeAdd(filePath string) error {
 
 	// TODO: distinguish between file and dir (now dir only)
 
-	files, err := utils.GetFiles(filePath)
+	stat, err := os.Stat(filePath)
 	if err != nil {
 		return err
 	}
+
+	files := []string{}
+	if stat.IsDir() {
+		files, err = utils.GetFiles(filePath)
+		if err != nil {
+			return err
+		}
+	} else {
+		files = append(files, filePath)
+    }
 
 	var isAddNewFile bool = false
 
