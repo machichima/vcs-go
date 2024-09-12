@@ -293,7 +293,6 @@ func WriteCommit(commit Commit) (string, error) {
         return "", err
     }
 
-
 	parentDir := hash[:2]
 	fullObjectsDir := ObjectsDirName + "/" + parentDir
 
@@ -307,4 +306,26 @@ func WriteCommit(commit Commit) (string, error) {
 	}
 
 	return hash, nil
+}
+
+
+// Read the commit from the provided hash (within folder .vgo/objects/hash[:2])
+//
+// Return Commit struct
+func ReadCommit(hash string) (Commit, error) {
+
+    fullObjectsDir := filepath.Join(ObjectsDirName, hash[:2])
+
+    byte, err := os.ReadFile(filepath.Join(fullObjectsDir, hash))
+	if err != nil {
+		return Commit{}, err
+	}
+
+	buff := bytes.NewBuffer(byte)
+    commit, err := DeserializeCommit(buff)
+	if err != nil {
+		return Commit{}, err
+	}
+
+	return commit, nil
 }
