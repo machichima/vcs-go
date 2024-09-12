@@ -28,6 +28,14 @@ func SerializeIndex(data Index, buffer *bytes.Buffer) error {
 	return err
 }
 
+func SerializeCommit(data Commit, buffer *bytes.Buffer) error {
+
+	encoder := gob.NewEncoder(buffer)
+	err := encoder.Encode(data)
+
+	return err
+}
+
 func DeserializeBlob(buffer *bytes.Buffer) ([]byte, error) {
 
 	// fmt.Printf("Buffer addr in Deserialize: %p\n", buffer)

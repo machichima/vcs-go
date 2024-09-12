@@ -223,3 +223,88 @@ func DeleteObject(hash string) error {
 
 	return nil
 }
+
+
+// write file tree (index object) to objects, returning the hash of the filetree if error is nil
+func WriteFileTree(index Index) (string, error) {
+
+	// serialized index buffer
+	var serializedBuffer bytes.Buffer
+	if err := SerializeIndex(index, &serializedBuffer); err != nil {
+		return "", err
+	}
+
+    hash, err := HashBlob(serializedBuffer.Bytes())
+    if err != nil {
+        return "", err
+    }
+
+
+	parentDir := hash[:2]
+	fullObjectsDir := ObjectsDirName + "/" + parentDir
+
+	if err := CreateOneDir(fullObjectsDir); err != nil {
+		return "", err
+	}
+
+	// write blob to file
+	if err := os.WriteFile(fullObjectsDir+"/"+hash, serializedBuffer.Bytes(), os.ModePerm); err != nil {
+		return "", err
+	}
+
+	return hash, nil
+}
+
+
+// Read the filetree from the provided hash (within folder .vgo/objects/hash[:2])
+//
+// Return index 
+func ReadFileTree(hash string) (Index, error) {
+
+	parentDir := hash[:2]
+	fullObjectsDir := ObjectsDirName + "/" + parentDir
+
+    byte, err := os.ReadFile(filepath.Join(fullObjectsDir, hash))
+	if err != nil {
+		return Index{}, err
+	}
+
+	buff := bytes.NewBuffer(byte)
+	index, err := DeserializeIndex(buff)
+	if err != nil {
+		return Index{}, err
+	}
+
+	return index, nil
+}
+
+
+// write the commit struct to file and return its hash if err is nil
+func WriteCommit(commit Commit) (string, error) {
+
+	// serialized index buffer
+	var serializedBuffer bytes.Buffer
+	if err := SerializeCommit(commit, &serializedBuffer); err != nil {
+		return "", err
+	}
+
+    hash, err := HashBlob(serializedBuffer.Bytes())
+    if err != nil {
+        return "", err
+    }
+
+
+	parentDir := hash[:2]
+	fullObjectsDir := ObjectsDirName + "/" + parentDir
+
+	if err := CreateOneDir(fullObjectsDir); err != nil {
+		return "", err
+	}
+
+	// write blob to file
+	if err := os.WriteFile(fullObjectsDir+"/"+hash, serializedBuffer.Bytes(), os.ModePerm); err != nil {
+		return "", err
+	}
+
+	return hash, nil
+}
