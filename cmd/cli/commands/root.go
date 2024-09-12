@@ -18,6 +18,7 @@ func ExecuteCommands() {
             AddSubCmd,
             StatusSubCmd,
             CommitSubCmd,
+            LogSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -63,5 +64,13 @@ var CommitSubCmd = &cli.Command{
 	Action: func(c *cli.Context) error {
         msg := c.String("message")
 		return executeCommit(msg)
+	},
+}
+
+var LogSubCmd = &cli.Command{
+	Name:  "log",
+	Usage: "show the commit history",
+	Action: func(c *cli.Context) error {
+		return executeLog()
 	},
 }
