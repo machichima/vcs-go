@@ -185,7 +185,6 @@ func AddToIndex(index *Index, file string, hash string) (bool, error) {
 
     var isNewFile bool = false
 
-    // ERROR: does not handle file with same hash
 	// file already exists in index
 	if index.FileToHash[file] != "" {
         if index.FileToHash[file] == hash {
@@ -197,6 +196,11 @@ func AddToIndex(index *Index, file string, hash string) (bool, error) {
 		}
 	} else {
         isNewFile = true
+    }
+
+    // empty index content (no staged files)
+    if len(index.FileToHash) == 0 {
+        index.FileToHash = make(map[string]string)
     }
 
 	// update or add file-hash to index
