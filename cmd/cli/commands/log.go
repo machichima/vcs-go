@@ -25,16 +25,20 @@ func executeLog() error {
 		queue = queue[1:]
 
 		// get the commit file by the hash
-        commit, err := utils.ReadCommit(hash)
-        if err != nil {
-            return err
-        }
+		commit, err := utils.ReadCommit(hash)
+		if err != nil {
+			return err
+		}
 
-        fmt.Println(commit)
+		fmt.Println("commit ", hash)
+		fmt.Printf("%s \n\n", commit.Message)
+
+		// append previous commit
+		if commit.ParentCommit != "" {
+            queue = append(queue, commit.ParentCommit)
+		}
 
 	}
-
-    // TODO: format the output of the log
 
 	return nil
 }
