@@ -180,25 +180,25 @@ func WriteIndexFile(index Index) error {
 // If err is not nil, bool is false
 func AddToIndex(index *Index, file string, hash string) (bool, error) {
 
-    var isNewFile bool = false
+	var isNewFile bool = false
 
 	// file already exists in index
 	if index.FileToHash[file] != "" {
-        if index.FileToHash[file] == hash {
-            // file already exists in index with same hash
-            return false, nil
-        }
+		if index.FileToHash[file] == hash {
+			// file already exists in index with same hash
+			return false, nil
+		}
 		if err := DeleteObject(index.FileToHash[file]); err != nil {
 			return false, err
 		}
 	} else {
-        isNewFile = true
-    }
+		isNewFile = true
+	}
 
-    // empty index content (no staged files)
-    if len(index.FileToHash) == 0 {
-        index.FileToHash = make(map[string]string)
-    }
+	// empty index content (no staged files)
+	if len(index.FileToHash) == 0 {
+		index.FileToHash = make(map[string]string)
+	}
 
 	// update or add file-hash to index
 	index.FileToHash[file] = hash
@@ -225,7 +225,6 @@ func DeleteObject(hash string) error {
 	return nil
 }
 
-
 // write file tree (index object) to objects, returning the hash of the filetree if error is nil
 func WriteFileTree(index Index) (string, error) {
 
@@ -235,11 +234,10 @@ func WriteFileTree(index Index) (string, error) {
 		return "", err
 	}
 
-    hash, err := HashBlob(serializedBuffer.Bytes())
-    if err != nil {
-        return "", err
-    }
-
+	hash, err := HashBlob(serializedBuffer.Bytes())
+	if err != nil {
+		return "", err
+	}
 
 	parentDir := hash[:2]
 	fullObjectsDir := ObjectsDirName + "/" + parentDir
@@ -256,16 +254,15 @@ func WriteFileTree(index Index) (string, error) {
 	return hash, nil
 }
 
-
 // Read the filetree from the provided hash (within folder .vgo/objects/hash[:2])
 //
-// Return index 
+// Return index
 func ReadFileTree(hash string) (Index, error) {
 
 	parentDir := hash[:2]
 	fullObjectsDir := ObjectsDirName + "/" + parentDir
 
-    byte, err := os.ReadFile(filepath.Join(fullObjectsDir, hash))
+	byte, err := os.ReadFile(filepath.Join(fullObjectsDir, hash))
 	if err != nil {
 		return Index{}, err
 	}
@@ -279,7 +276,6 @@ func ReadFileTree(hash string) (Index, error) {
 	return index, nil
 }
 
-
 // write the commit struct to file and return its hash if err is nil
 func WriteCommit(commit Commit) (string, error) {
 
@@ -289,10 +285,10 @@ func WriteCommit(commit Commit) (string, error) {
 		return "", err
 	}
 
-    hash, err := HashBlob(serializedBuffer.Bytes())
-    if err != nil {
-        return "", err
-    }
+	hash, err := HashBlob(serializedBuffer.Bytes())
+	if err != nil {
+		return "", err
+	}
 
 	parentDir := hash[:2]
 	fullObjectsDir := ObjectsDirName + "/" + parentDir
@@ -309,21 +305,20 @@ func WriteCommit(commit Commit) (string, error) {
 	return hash, nil
 }
 
-
 // Read the commit from the provided hash (within folder .vgo/objects/hash[:2])
 //
 // Return Commit struct
 func ReadCommit(hash string) (Commit, error) {
 
-    fullObjectsDir := filepath.Join(ObjectsDirName, hash[:2])
+	fullObjectsDir := filepath.Join(ObjectsDirName, hash[:2])
 
-    byte, err := os.ReadFile(filepath.Join(fullObjectsDir, hash))
+	byte, err := os.ReadFile(filepath.Join(fullObjectsDir, hash))
 	if err != nil {
 		return Commit{}, err
 	}
 
 	buff := bytes.NewBuffer(byte)
-    commit, err := DeserializeCommit(buff)
+	commit, err := DeserializeCommit(buff)
 	if err != nil {
 		return Commit{}, err
 	}
