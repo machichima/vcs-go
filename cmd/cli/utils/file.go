@@ -391,3 +391,38 @@ func ReadFileBlobWithSerialize(hash string) (string, error) {
     return string(blob), nil
 }
 
+
+// Compare the file content within the filePath to the committed files.
+// If error is nil, the return integar represent:
+// - 0: the file is newly created (no previous file version)
+// - 1: the file is same as one in the committed filetree
+// - 2: the file is deleted
+func CompareFileToFileTree(filePath string, fileTree Index) (int, error) {
+
+	fileByte, err := os.ReadFile(filePath)
+	if err != nil {
+		return ErrorHappened, err
+	}
+
+    targetHash, ok := fileTree.FileToHash[filePath]
+    if !ok {
+        // no found path in the previous commit (a new file)
+        return NewFile, nil
+    }
+
+    // hash the new file
+    var serBuf bytes.Buffer
+    blob := Blob{Bytes: fileByte}
+    if err := SerializeBlob(blob, &serBuf); err != nil {
+        return ErrorHappened, err
+    }
+
+    blobHash, err := HashBlob(serBuf.Bytes())
+
+    // see if the hash of new file is same as original ones in commit
+    if targetHash == blobHash {
+        return SameFile, nil
+    }
+
+	return ModifiedFile, nil
+}
