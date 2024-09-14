@@ -333,3 +333,61 @@ func ReadCommit(hash string) (Commit, error) {
 
 	return commit, nil
 }
+
+// write the blob by serialize the file and save under
+// the file with name of the file's hash
+//
+// The file and their hash will be written into the Index file
+// for recording staged files
+//
+// Return bool showing whether the added file is new 
+// (not already in staging). If error is nil
+// true is added file is new, else false
+func WriteFileBlobWithSerialize(filePath string) (bool, error) {
+    var blob Blob
+    var err error
+    blob.Bytes, err = os.ReadFile(filePath)
+    if err != nil {
+        return false, err
+    }
+
+	var serBlob bytes.Buffer
+
+	if err := SerializeBlob(blob, &serBlob); err != nil {
+		return false, err
+	}
+
+	hash, err := HashBlob(serBlob.Bytes())
+	if err != nil {
+		return false, err
+	}
+
+    isNewFile, err := SaveFileByHash(filePath, hash, serBlob.Bytes())
+    if err != nil {
+        return false, err
+    }
+
+    return isNewFile, nil
+}
+
+
+// Read the serialzed blob from the hash
+//
+// Return the content of the file in string type
+func ReadFileBlobWithSerialize(hash string) (string, error) {
+	fullObjectsDir := filepath.Join(ObjectsDirName, hash[:2])
+
+	byte, err := os.ReadFile(filepath.Join(fullObjectsDir, hash))
+	if err != nil {
+		return "", err
+	}
+
+	buff := bytes.NewBuffer(byte)
+	blob, err := DeserializeBlob(buff)
+	if err != nil {
+		return "", err
+	}
+
+    return string(blob), nil
+}
+
