@@ -87,10 +87,11 @@ func FileToStruct(path string) (Blob, error) {
 //
 // e.g. hash1: dfq8hfroihffjlkasj / hash2: df32fjqf81efh1ofj
 // saved in df/dfq8hfroihffjlkasj and df/df32fjqf81efh1ofj file
-// If the commandType is AddType, then add the file name and hash to the index file
+//
+// Also add the file name and hash to the index file
 //
 // if error is nil, return true means added the new file, else return false
-func SaveFileByHash(filePath string, hash string, blob []byte, commandType int) (bool, error) {
+func SaveFileByHash(filePath string, hash string, blob []byte) (bool, error) {
 
 	// create parent dir
 	parentDir := hash[:2]
@@ -105,35 +106,32 @@ func SaveFileByHash(filePath string, hash string, blob []byte, commandType int) 
 		return false, err
 	}
 
-	if commandType == AddType {
-		//read index
-		index, err := ReadIndexFile()
-		if err != nil {
-			if errors.Is(err, os.ErrNotExist) {
-				// if the index file does not exist, create one with empty index struct
-				fmt.Println("Index file does not exist, creating one new")
-                index = Index{FileToHash: make(map[string]string)}
-			} else {
-				return false, err
-			}
-		}
-        isNewFile, err := AddToIndex(&index, filePath, hash)
-        if err != nil {
+    //read index
+    index, err := ReadIndexFile()
+    if err != nil {
+        if errors.Is(err, os.ErrNotExist) {
+            // if the index file does not exist, create one with empty index struct
+            fmt.Println("Index file does not exist, creating one new")
+            index = Index{FileToHash: make(map[string]string)}
+        } else {
             return false, err
         }
+    }
+    isNewFile, err := AddToIndex(&index, filePath, hash)
+    if err != nil {
+        return false, err
+    }
 
-        // Write index file if the file is new
-        // TODO: update this to write index file for all added files
-        if isNewFile {
-            if err := WriteIndexFile(index); err != nil {
-                return false, err
-            }
+    // Write index file if the file is new
+    // TODO: update this to write index file for all added files
+    if isNewFile {
+        if err := WriteIndexFile(index); err != nil {
+            return false, err
         }
+    }
 
-        return isNewFile, nil
-	}
+    return isNewFile, nil
 
-	return false, nil
 }
 
 // read INDEX file in .vgo if exist else create one
@@ -175,7 +173,6 @@ func WriteIndexFile(index Index) error {
 
 	return nil
 }
-
 
 // Add file and its hash to INDEX file. Serialize the index struct and write to INDEX file
 //
