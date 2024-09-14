@@ -21,8 +21,16 @@ const (
 )
 
 const (
+	NewFile       = iota
+	ModifiedFile  = iota
+	SameFile      = iota
+	DeletedFile   = iota
+	ErrorHappened = iota
+)
+
+const (
 	RootDirName    = ".vgo"
 	ObjectsDirName = ".vgo/objects" // serialized blobs
 	IndexDirName   = ".vgo/index"   // For staging
-    HEADFileName   = ".vgo/HEAD"    // points to the current commit
+	HEADFileName   = ".vgo/HEAD"    // points to the current commit
 )
