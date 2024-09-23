@@ -186,19 +186,16 @@ func WriteIndexFile(index Index) error {
 // If err is not nil, bool is false
 func AddToIndex(index *Index, file string, hash string) (bool, error) {
 
-	var isNewFile bool = false
-
 	// file already exists in index
 	if index.FileToHash[file] != "" {
 		if index.FileToHash[file] == hash {
 			// file already exists in index with same hash
 			return false, nil
 		}
+		// same file with different content (diff hash)
 		if err := DeleteObject(index.FileToHash[file]); err != nil {
 			return false, err
 		}
-	} else {
-		isNewFile = true
 	}
 
 	// empty index content (no staged files)
@@ -209,7 +206,7 @@ func AddToIndex(index *Index, file string, hash string) (bool, error) {
 	// update or add file-hash to index
 	index.FileToHash[file] = hash
 
-	return isNewFile, nil
+	return true, nil
 }
 
 func DeleteObject(hash string) error {
@@ -338,16 +335,16 @@ func ReadCommit(hash string) (Commit, error) {
 // The file and their hash will be written into the Index file
 // for recording staged files
 //
-// Return bool showing whether the added file is new 
+// Return bool showing whether the added file is new
 // (not already in staging). If error is nil
 // true is added file is new, else false
 func WriteFileBlobWithSerialize(filePath string) (bool, error) {
-    var blob Blob
-    var err error
-    blob.Bytes, err = os.ReadFile(filePath)
-    if err != nil {
-        return false, err
-    }
+	var blob Blob
+	var err error
+	blob.Bytes, err = os.ReadFile(filePath)
+	if err != nil {
+		return false, err
+	}
 
 	var serBlob bytes.Buffer
 
@@ -360,14 +357,13 @@ func WriteFileBlobWithSerialize(filePath string) (bool, error) {
 		return false, err
 	}
 
-    isNewFile, err := SaveFileByHash(filePath, hash, serBlob.Bytes())
-    if err != nil {
-        return false, err
-    }
+	isNewFile, err := SaveFileByHash(filePath, hash, serBlob.Bytes())
+	if err != nil {
+		return false, err
+	}
 
-    return isNewFile, nil
+	return isNewFile, nil
 }
-
 
 // Read the serialzed blob from the hash
 //
@@ -386,9 +382,8 @@ func ReadFileBlobWithSerialize(hash string) (string, error) {
 		return "", err
 	}
 
-    return string(blob), nil
+	return string(blob), nil
 }
-
 
 // Compare the file content within the filePath to the committed files.
 // If error is nil, the return integar represent:
@@ -402,25 +397,25 @@ func CompareFileToFileTree(filePath string, fileTree Index) (int, error) {
 		return ErrorHappened, err
 	}
 
-    targetHash, ok := fileTree.FileToHash[filePath]
-    if !ok {
-        // no found path in the previous commit (a new file)
-        return NewFile, nil
-    }
+	targetHash, ok := fileTree.FileToHash[filePath]
+	if !ok {
+		// no found path in the previous commit (a new file)
+		return NewFile, nil
+	}
 
-    // hash the new file
-    var serBuf bytes.Buffer
-    blob := Blob{Bytes: fileByte}
-    if err := SerializeBlob(blob, &serBuf); err != nil {
-        return ErrorHappened, err
-    }
+	// hash the new file
+	var serBuf bytes.Buffer
+	blob := Blob{Bytes: fileByte}
+	if err := SerializeBlob(blob, &serBuf); err != nil {
+		return ErrorHappened, err
+	}
 
-    blobHash, err := HashBlob(serBuf.Bytes())
+	blobHash, err := HashBlob(serBuf.Bytes())
 
-    // see if the hash of new file is same as original ones in commit
-    if targetHash == blobHash {
-        return SameFile, nil
-    }
+	// see if the hash of new file is same as original ones in commit
+	if targetHash == blobHash {
+		return SameFile, nil
+	}
 
 	return ModifiedFile, nil
 }
