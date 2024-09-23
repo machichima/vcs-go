@@ -90,47 +90,53 @@ func FileToStruct(path string) (Blob, error) {
 //
 // Also add the file name and hash to the index file
 //
+// If the hash string is "", means the file is deleted, hence
+//
 // if error is nil, return true means added the new file, else return false
 func SaveFileByHash(filePath string, hash string, blob []byte) (bool, error) {
 
-	// create parent dir
-	parentDir := hash[:2]
-	fullObjectsDir := ObjectsDirName + "/" + parentDir
+	// empty hash, for deleted files
+	if hash != "" {
+		// create parent dir
+		parentDir := hash[:2]
+		fullObjectsDir := ObjectsDirName + "/" + parentDir
 
-	if err := CreateOneDir(fullObjectsDir); err != nil {
+		if err := CreateOneDir(fullObjectsDir); err != nil {
+			return false, err
+		}
+
+		// write blob to file
+		if err := os.WriteFile(fullObjectsDir+"/"+hash, blob, os.ModePerm); err != nil {
+			return false, err
+		}
+	}
+
+	//read index
+	index, err := ReadIndexFile()
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			// if the index file does not exist, create one with empty index struct
+			fmt.Println("Index file does not exist, creating one new")
+			index = Index{FileToHash: make(map[string]string)}
+		} else {
+			return false, err
+		}
+	}
+
+	isNewFile, err := AddToIndex(&index, filePath, hash)
+	if err != nil {
 		return false, err
 	}
 
-	// write blob to file
-	if err := os.WriteFile(fullObjectsDir+"/"+hash, blob, os.ModePerm); err != nil {
-		return false, err
+	// Write index file if the file is new
+	// TODO: update this to write index file for all added files
+	if isNewFile {
+		if err := WriteIndexFile(index); err != nil {
+			return false, err
+		}
 	}
 
-    //read index
-    index, err := ReadIndexFile()
-    if err != nil {
-        if errors.Is(err, os.ErrNotExist) {
-            // if the index file does not exist, create one with empty index struct
-            fmt.Println("Index file does not exist, creating one new")
-            index = Index{FileToHash: make(map[string]string)}
-        } else {
-            return false, err
-        }
-    }
-    isNewFile, err := AddToIndex(&index, filePath, hash)
-    if err != nil {
-        return false, err
-    }
-
-    // Write index file if the file is new
-    // TODO: update this to write index file for all added files
-    if isNewFile {
-        if err := WriteIndexFile(index); err != nil {
-            return false, err
-        }
-    }
-
-    return isNewFile, nil
+	return isNewFile, nil
 
 }
 
