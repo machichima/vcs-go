@@ -50,10 +50,10 @@ func GetFiles(path string) ([]string, error) {
 		for _, dir := range dirs {
 			if dir.IsDir() {
 				if dir.Name() != ".vgo" {
-					queue = append(queue, path+dir.Name()+"/")
+					queue = append(queue, filepath.Join(path, dir.Name()))
 				}
 			} else {
-				fileNames = append(fileNames, path+dir.Name())
+				fileNames = append(fileNames, filepath.Join(path, dir.Name()))
 			}
 		}
 	}
