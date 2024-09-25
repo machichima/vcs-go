@@ -99,30 +99,52 @@ go test github.com/machichima/vcs-go/cmd/cli/utils -v -run function
 - [x] init
     - [x] create .vcsgo folder with empty structures inside
     - [x] Detect if .vcsgo folder already exists
-- [ ] Serialization
+- [x] Serialization
     - [x] files into blob
     - [x] Serialize the file blob and deserialize
     - [x] Hash the file blob
     - [x] file tree into blob
         - [x] Get file with directory structure
         - [x] hashmap for file dir structure to SHA-1 hash of the file
-    - [ ] commit into blob
+    - [x] commit into blob
 - [x] SHA-1 hashing function
     - [x] Hash from serialized objects -> get hash string
     - [x] Store hash string in .vcsgo/objects
+- [x] Track difference between current files and previous commit
+    - used in stage function
+- [x] Combine the filetree from new and old commit to form a new one
+    - always save the newest full filetree of the project
+
 - [x] add
 - [x] status
-- [ ] commit
-- [ ] log
-- [ ] checkout
+- [x] commit
+- [x] log
+- [ ] Write test (functional test)
+    - [ ] add
+    - [ ] status
+    - [ ] commit
+    - [ ] log
 - [ ] rm
+- [ ] checkout
 - [ ] branch operation...
 
 
 ## Work Log
 
+### 25/09/2-24
+- [x] Finish until log function
+    - update filetree based on index and prev filetree
+
+### 13/09/2024
+- [x] Track difference between current files and previous commit
+    - used in stage function
+- [x] Combine the filetree from new and old commit to form a new one
+    - always save the newest full filetree of the project
+
 ### 12/09/2024
-- [ ] Finish status command
+- [x] Finish status command
+- [x] Finish commit command
+- [x] Finish log command
 
 ### Before 12/09/2024
 - [x] Finish the add function
