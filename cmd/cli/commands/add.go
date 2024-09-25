@@ -104,14 +104,14 @@ func executeAdd(filePath string) error {
 
 	}
 
-	fmt.Println("current dir:")
-	fmt.Println(files)
-
-	fmt.Println("deleted files:")
-	fmt.Println(deletedFiles)
-
-	fmt.Println("committed filetree")
-	fmt.Println(fileTree)
+	// fmt.Println("current dir:")
+	// fmt.Println(files)
+	//
+	// fmt.Println("deleted files:")
+	// fmt.Println(deletedFiles)
+	//
+	// fmt.Println("committed filetree")
+	// fmt.Println(fileTree)
 
 	// adding new files to objects
 	var isAddNewFile bool = false

@@ -129,7 +129,6 @@ func SaveFileByHash(filePath string, hash string, blob []byte) (bool, error) {
 	}
 
 	// Write index file if the file is new
-	// TODO: update this to write index file for all added files
 	if isNewFile {
 		if err := WriteIndexFile(index); err != nil {
 			return false, err
