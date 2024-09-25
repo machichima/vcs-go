@@ -38,17 +38,34 @@ func executeCommit(msg string) error {
         return nil
     }
 
-    hash, err := utils.WriteFileTree(index)
-    if err != nil {
-        return err
-    }
-
     // check if HEAD files exists and retrieve the previous commit hash
     headCommitHash, err := os.ReadFile(utils.HEADFileName)
     if err != nil{
         if !os.IsNotExist(err) {
             return err
         }
+    }
+
+    // if headCommitHash != nil, read the previous filetree
+    // and merge with the current one
+    newFileTree := index
+    if headCommitHash != nil {
+        prevCommit, err := utils.ReadCommit(string(headCommitHash))
+        if err != nil {
+            return err
+        }
+        prevFileTree, err := utils.ReadFileTree(prevCommit.FileTree)
+        if err != nil {
+            return err
+        }
+
+        newFileTree = utils.MergeIndexAndFileTree(index, prevFileTree)
+    }
+
+    // merge index filetree with the previous committed files
+    hash, err := utils.WriteFileTree(newFileTree)
+    if err != nil {
+        return err
     }
 
     commit := utils.Commit{
@@ -66,6 +83,9 @@ func executeCommit(msg string) error {
     if err := os.WriteFile(utils.HEADFileName, []byte(commitHash), os.ModePerm); err != nil {
         return err
     }
+
+    // clear the index file that is committed
+    os.WriteFile(utils.IndexDirName, []byte(""), os.ModePerm)
 
     return nil
 }
