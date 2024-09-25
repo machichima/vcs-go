@@ -50,7 +50,14 @@ func executeStatus() error {
 	var stagedNewFiles []string
 	var stagedDeletedFiles []string
 
+	// get all files in the workspace
+	files, err := utils.GetFiles("./")
+	if err != nil {
+		return err
+	}
+
 	// Go through the filetree of prev commit
+    var fileTree utils.Index
 	if !isFirstCommit {
 		commitHash := string(commitHashByte)
 
@@ -62,56 +69,51 @@ func executeStatus() error {
 
 		// Receive the hash of the file with path same as filePath
 		fileTreeHash := commit.FileTree
-		fileTree, err := utils.ReadFileTree(fileTreeHash)
+		fileTree, err = utils.ReadFileTree(fileTreeHash)
 		if err != nil {
 			return err
-		}
-
-		// get all files in the workspace
-		files, err := utils.GetFiles("./")
-		if err != nil {
-			return err
-		}
-
-		// Not staged (modified)
-		for _, file := range files {
-
-			fileStatus, err := utils.CompareFileToFileTree(file, fileTree)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(fileStatus)
-
-            // file is staged
-			if _, ok := index.FileToHash[file]; ok {
-				if fileStatus == utils.NewFile {
-					stagedNewFiles = append(stagedNewFiles, file)
-				} else if fileStatus == utils.ModifiedFile {
-					stagedModifiedFiles = append(stagedModifiedFiles, file)
-				}
-			} else {
-
-				if fileStatus == utils.NewFile {
-					newFiles = append(newFiles, file)
-				} else if fileStatus == utils.ModifiedFile {
-					modifiedFiles = append(modifiedFiles, file)
-				}
-
-			}
-
 		}
 
 		for file, _ := range fileTree.FileToHash {
 			if !slices.Contains(files, file) {
 				// file is deleted since last commit
 
-                if _, ok := index.FileToHash[file]; ok {
-                    stagedDeletedFiles = append(stagedDeletedFiles, file)
-                } else {
-                    deletedFiles = append(deletedFiles, file)
-                }
+				if _, ok := index.FileToHash[file]; ok {
+					stagedDeletedFiles = append(stagedDeletedFiles, file)
+				} else {
+					deletedFiles = append(deletedFiles, file)
+				}
 			}
+		}
+
+	}
+
+	// new or modified
+	for _, file := range files {
+
+        var fileStatus int = utils.NewFile
+        if !isFirstCommit {
+            fileStatus, err = utils.CompareFileToFileTree(file, fileTree)
+            if err != nil {
+                return err
+            }
+        }
+
+		// file is staged
+		if _, ok := index.FileToHash[file]; ok {
+			if fileStatus == utils.NewFile {
+				stagedNewFiles = append(stagedNewFiles, file)
+			} else if fileStatus == utils.ModifiedFile {
+				stagedModifiedFiles = append(stagedModifiedFiles, file)
+			}
+		} else {
+
+			if fileStatus == utils.NewFile {
+				newFiles = append(newFiles, file)
+			} else if fileStatus == utils.ModifiedFile {
+				modifiedFiles = append(modifiedFiles, file)
+			}
+
 		}
 
 	}
@@ -127,7 +129,7 @@ func executeStatus() error {
 		fmt.Println(file, " (deleted)")
 	}
 
-	fmt.Println("Modifications Not Staged For Commit: ")
+	fmt.Println("\nModifications Not Staged For Commit: ")
 	for _, file := range newFiles {
 		fmt.Println(file, " (new)")
 	}
