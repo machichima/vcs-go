@@ -19,6 +19,7 @@ func ExecuteCommands() {
             StatusSubCmd,
             CommitSubCmd,
             LogSubCmd,
+            RmSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -72,5 +73,14 @@ var LogSubCmd = &cli.Command{
 	Usage: "show the commit history",
 	Action: func(c *cli.Context) error {
 		return executeLog()
+	},
+}
+
+var RmSubCmd = &cli.Command{
+	Name:  "rm",
+	Usage: "unstaged the file or dir",
+	Action: func(c *cli.Context) error {
+        filePath := c.Args().First()
+		return executeRm(filePath)
 	},
 }
