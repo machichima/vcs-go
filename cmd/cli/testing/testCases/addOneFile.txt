@@ -1,0 +1,28 @@
+> init
+<<<
+
+> status
+<<<
+Staged:
+
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
+test/test_3.txt  (new)
+test/test_4.txt  (new)
+> add test_1.txt
+<<<
+Index file does not exist, creating one new
+Files added successfully
+> add test_1.txt
+<<<
+No new files added
+> status
+<<<
+Staged:
+test_1.txt  (new)
+
+Modifications Not Staged For Commit:
+test_2.txt  (new)
+test/test_3.txt  (new)
+test/test_4.txt  (new)
