@@ -30,7 +30,7 @@ func executeLog() error {
 			return err
 		}
 
-		fmt.Println("commit ", hash)
+        fmt.Println("commit:", hash)
 		fmt.Printf("%s \n\n", commit.Message)
 
 		// append previous commit

@@ -20,7 +20,8 @@ import (
 func executeCommit(msg string) error {
 
     if msg == "" {
-        return fmt.Errorf("Please provide the commit messages")
+        fmt.Println("Please provide the commit messages")
+        return nil
     }
 
     index, err := utils.ReadIndexFile()

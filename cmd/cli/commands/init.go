@@ -1,7 +1,8 @@
 package commands
 
 import (
-	"errors"
+	"fmt"
+
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
 
@@ -10,7 +11,7 @@ func executeInit() error {
 	if exists, err := utils.CheckPathExists(utils.RootDirName); err != nil {
 		return err
 	} else if exists {
-		return errors.New("repository already exists")
+        fmt.Println("repository already initialized")
 	}
 
 	if err := utils.CreateDirs(utils.RootDirName, utils.ObjectsDirName); err != nil {
