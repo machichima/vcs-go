@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -15,11 +16,12 @@ func ExecuteCommands() {
 		Usage: "vcs-go (vgo) is a simple version control system",
 		Commands: []*cli.Command{
 			InitSubCmd,
-            AddSubCmd,
-            StatusSubCmd,
-            CommitSubCmd,
-            LogSubCmd,
-            RmSubCmd,
+			AddSubCmd,
+			StatusSubCmd,
+			CommitSubCmd,
+			LogSubCmd,
+			RmSubCmd,
+			CheckoutSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -39,7 +41,7 @@ var AddSubCmd = &cli.Command{
 	Name:  "add",
 	Usage: "stage changed files",
 	Action: func(c *cli.Context) error {
-        filePath := c.Args().First()
+		filePath := c.Args().First()
 		return executeAdd(filePath)
 	},
 }
@@ -55,15 +57,15 @@ var StatusSubCmd = &cli.Command{
 var CommitSubCmd = &cli.Command{
 	Name:  "commit",
 	Usage: "commit the staged files",
-    Flags: []cli.Flag {
-        &cli.StringFlag {
-            Name: "message",
-            Aliases: []string{"m"},
-            Usage: "commit message",
-        },
-    },
+	Flags: []cli.Flag{
+		&cli.StringFlag{
+			Name:    "message",
+			Aliases: []string{"m"},
+			Usage:   "commit message",
+		},
+	},
 	Action: func(c *cli.Context) error {
-        msg := c.String("message")
+		msg := c.String("message")
 		return executeCommit(msg)
 	},
 }
@@ -80,7 +82,29 @@ var RmSubCmd = &cli.Command{
 	Name:  "rm",
 	Usage: "unstaged the file or dir",
 	Action: func(c *cli.Context) error {
-        filePath := c.Args().First()
+		filePath := c.Args().First()
 		return executeRm(filePath)
+	},
+}
+
+var CheckoutSubCmd = &cli.Command{
+	Name:  "checkout",
+	Usage: "checkout file",
+	Action: func(c *cli.Context) error {
+        if c.Args().Len() > 2 {
+            return errors.New("Can only provide one commit and one filename")
+        }
+		if c.Args().Len() > 1 {
+			// have commit and files
+			return executeCheckout(
+				c.Args().First(),     // commit
+				c.Args().Slice()[1], // file
+			)
+		} else {
+			return executeCheckout(
+				"",     // commit
+				c.Args().Slice()[1], // file
+			)
+		}
 	},
 }
