@@ -36,4 +36,10 @@ Please provide the commit messages
 <<<
 commit: {HASH}
 add test/
+> status
+<<<
+Staged:
 
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
