@@ -23,10 +23,6 @@ import (
 //
 // Note: one file only for usage with filename
 func executeCheckout(commitHash string, fileName string) error {
-	fmt.Println("commit hash: ", commitHash)
-	fmt.Println("fileName: ", fileName)
-
-	// Checkout fileName with the HEAD commit version
 
 	// no commit hash provided, use the HEAD
 	// get head commit
