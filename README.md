@@ -119,17 +119,28 @@ go test github.com/machichima/vcs-go/cmd/cli/utils -v -run function
 - [x] status
 - [x] commit
 - [x] log
-- [ ] Write test (functional test)
-    - [ ] add
-    - [ ] status
-    - [ ] commit
-    - [ ] log
-- [ ] rm
-- [ ] checkout
-- [ ] branch operation...
-
+- [x] Write test (functional test)
+    - [x] add
+    - [x] status
+    - [x] commit
+    - [x] log
+- [x] rm
+- [x] checkout
+- [ ] branch
+- [ ] branch -d (delete branch)
+- [ ] merge
+- [ ] remote option ...
 
 ## Work Log
+
+### 11/10/2024
+- [x] Finish tests for `checkout`
+
+### 07/10/2024
+- [x] finish functional test for add / status / rm / commit / log commands
+
+### 26/09/2024
+- [x] finish rm command
 
 ### 25/09/2-24
 - [x] Finish until log function
