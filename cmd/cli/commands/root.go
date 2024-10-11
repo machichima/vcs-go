@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"errors"
 	"log"
 	"os"
 
@@ -87,24 +86,42 @@ var RmSubCmd = &cli.Command{
 	},
 }
 
+
+var commitHash string
+var files []string
+
 var CheckoutSubCmd = &cli.Command{
 	Name:  "checkout",
 	Usage: "checkout file",
+	Flags: []cli.Flag{
+		&cli.StringFlag{
+			Name:        "commit",
+            Aliases: []string{"c"},
+			Usage:       "commit hash to checkout",
+			Destination: &commitHash,
+		},
+        &cli.StringSliceFlag{
+			Name:        "file",
+            Aliases: []string{"f"},
+			Usage:       "files to checkout",
+        },
+	},
 	Action: func(c *cli.Context) error {
-        if c.Args().Len() > 2 {
-            return errors.New("Can only provide one commit and one filename")
-        }
-		if c.Args().Len() > 1 {
-			// have commit and files
-			return executeCheckout(
-				c.Args().First(),     // commit
-				c.Args().Slice()[1], // file
-			)
-		} else {
-			return executeCheckout(
-				"",     // commit
-				c.Args().First(), // file
-			)
-		}
+        return executeCheckout(commitHash, c.StringSlice("file"))
+		// if c.Args().Len() > 2 {
+		// 	return errors.New("Can only provide one commit and one filename")
+		// }
+		// if c.Args().Len() > 1 {
+		// 	// have commit and files
+		// 	return executeCheckout(
+		// 		c.Args().First(),    // commit
+		// 		c.Args().Slice()[1], // file
+		// 	)
+		// } else {
+		// 	return executeCheckout(
+		// 		"",               // commit
+		// 		c.Args().First(), // file
+		// 	)
+		// }
 	},
 }

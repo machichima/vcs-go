@@ -9,20 +9,20 @@ import (
 
 // Three usecases:
 //
-// - checkout filename
+// - checkout -f filename
 //   - take the version of the file in the head commit and replace the current file
 //
-// - checkout COMMIT_ID filename
+// - checkout -c COMMIT_ID -f filename1, filename2
 //   - same as above, but take the version of the specific COMMIT
 //
-// - checkout COMMIT_ID
+// - checkout -c COMMIT_ID
 //   - same as above, but replace all files in the commit to the current files
 //
-// - checkout branch_name
+// - checkout -b branch_name
 //   - change branch (later)
 //
 // Note: one file only for usage with filename
-func executeCheckout(commitHash string, fileName string) error {
+func executeCheckout(commitHash string, fileNames []string) error {
 
 	// no commit hash provided, use the HEAD
 	// get head commit
@@ -34,7 +34,7 @@ func executeCheckout(commitHash string, fileName string) error {
 		commitHash = string(headbyte)
 	}
 
-    commit, err := utils.ReadCommit(commitHash)
+	commit, err := utils.ReadCommit(commitHash)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func executeCheckout(commitHash string, fileName string) error {
 
 	// no fileName provided, checkout all files in the filetree
 	// of the commit
-	if fileName == "" {
+	if len(fileNames) == 0 {
 
 		// loop through all files
 		for file, hash := range fileTree.FileToHash {
@@ -64,23 +64,27 @@ func executeCheckout(commitHash string, fileName string) error {
 		}
 
 	} else {
-		// filename provided
-		hash := fileTree.FileToHash[fileName]
-		if hash == "" {
-			// fileName does not exist
-			return fmt.Errorf("Error finding file %s in the previous commit, %s", fileName, os.ErrNotExist)
-		}
+		// filenames provided
+        for _, f := range fileNames {
 
-		// read committed content for the file
-		commitByte, err := utils.ReadFileBlobWithSerialize(hash)
-		if err != nil {
-			return err
-		}
+            hash := fileTree.FileToHash[f]
+            if hash == "" {
+                // fileName does not exist
+                return fmt.Errorf("error finding file %s in the previous commit", f)
+            }
 
-		// write committed content to the workspace
-		if err := os.WriteFile(fileName, []byte(commitByte), os.ModePerm); err != nil {
-			return err
-		}
+            // read committed content for the file
+            commitByte, err := utils.ReadFileBlobWithSerialize(hash)
+            if err != nil {
+                return err
+            }
+
+            // write committed content to the workspace
+            if err := os.WriteFile(f, []byte(commitByte), os.ModePerm); err != nil {
+                return err
+            }
+        }
 	}
+
 	return nil
 }
