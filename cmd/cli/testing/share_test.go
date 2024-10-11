@@ -37,7 +37,8 @@ func RunTestCases(dir string, testCaseFile string, t *testing.T) {
 	// }
 
 	for i, c := range commands {
-		output, err := ExecCommand(c, dir)
+
+		output, err := ExecCommand(c, dir, strings.ContainsAny(c, "!"))
 		output = strings.Trim(output, "\n")
 		if err != nil {
 			t.Errorf("Err exec command: %s", err)
@@ -132,7 +133,7 @@ func ReadTestCases(testCasesFile string) ([]string, []string, error) {
 // the directory to exec the command
 //
 // return output and the err
-func ExecCommand(command string, dir string) (string, error) {
+func ExecCommand(command string, dir string, isTermCmd bool) (string, error) {
 	// cmd := exec.Command("go", "run", "main.go", command)
 	// separate commands
 	re := regexp.MustCompile(`"(.*?)"|\S+`)
@@ -143,9 +144,23 @@ func ExecCommand(command string, dir string) (string, error) {
 		cmdArr[i] = strings.Trim(cmdArr[i], `"`)
 	}
 
-	cmdArgs := []string{"run", MainPath}
-	cmdArgs = append(cmdArgs, cmdArr...)
-	cmd := exec.Command("go", cmdArgs...)
+    cmdArgs := []string{}
+    var cmdName string
+	if isTermCmd {
+        cmdArr[0] = strings.Trim(cmdArr[0], "!")
+        cmdName = "/bin/sh"
+
+        cmdStr := strings.Join(cmdArr, " ")
+
+        cmdArgs = []string{"-c"}
+        cmdArgs = append(cmdArgs, cmdStr)
+
+	} else {
+        cmdName = "go"
+        cmdArgs = []string{"run", MainPath}
+        cmdArgs = append(cmdArgs, cmdArr...)
+    }
+    cmd := exec.Command(cmdName, cmdArgs...)
 	cmd.Dir = dir
 
 	outputByte, err := cmd.CombinedOutput()
