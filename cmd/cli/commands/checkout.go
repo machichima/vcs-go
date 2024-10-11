@@ -12,7 +12,7 @@ import (
 // - checkout -f filename
 //   - take the version of the file in the head commit and replace the current file
 //
-// - checkout -c COMMIT_ID -f filename1, filename2
+// - checkout -c COMMIT_ID -f filename1 -f filename2
 //   - same as above, but take the version of the specific COMMIT
 //
 // - checkout -c COMMIT_ID
