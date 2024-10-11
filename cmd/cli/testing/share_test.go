@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -28,29 +29,40 @@ func RunTestCases(dir string, testCaseFile string, t *testing.T) {
 		t.Errorf("Err when reading test cases file: %s", err)
 	}
 
-	// fmt.Println(commands)
-	// fmt.Println(expectedOutputs)
-
-	// change workspace to dir
-	// if err := os.Chdir(dir); err != nil {
-	// 	t.Errorf("Err when changing workspace dir: %s", err)
-	// }
-
+    var commitHashs []string
 	for i, c := range commands {
 
-		output, err := ExecCommand(c, dir, strings.ContainsAny(c, "!"))
+        fmt.Printf("test command: %s\n", c)
+
+        // detect {HASH} tag
+        re := regexp.MustCompile(`{(.*?)}`)
+        loc := re.FindStringIndex(c)
+        if loc != nil && len(commitHashs) > 0 {  // {HASH} detected
+            hashTag := strings.Trim(string(c[loc[0]:loc[1]]), "{}")
+            hashIndex, err := strconv.Atoi(strings.Split(hashTag, "_")[1])
+            if err != nil {
+                t.Error(err)
+            }
+            c = strings.Join([]string{c[:loc[0]], commitHashs[hashIndex], c[loc[1]:]}, "")
+        }
+
+        output, currCommitHashs, err := ExecCommand(c, dir, strings.ContainsAny(c, "!"))
 		output = strings.Trim(output, "\n")
 		if err != nil {
 			t.Errorf("Err exec command: %s", err)
 		}
-
-		fmt.Printf("test command: %s\n", c)
 
 		if output != expectedOutputs[i] {
 			t.Errorf("Output mismatch for command %s\n", c)
 			t.Errorf("Expected output: \n%s\n", expectedOutputs[i])
 			t.Errorf("Output get: \n%s\n", output)
 		}
+
+        // update commitHashs if currCommitHashs is not empty
+        if len(currCommitHashs) > 0 {
+            commitHashs = currCommitHashs
+        }
+
 	}
 
 }
@@ -129,11 +141,14 @@ func ReadTestCases(testCasesFile string) ([]string, []string, error) {
 	return commands, expectedOutputs, nil
 }
 
+
 // input "command" to execute and "dir" for
-// the directory to exec the command
+// the directory to exec the command. If the command will produce
+// commit hash, store them in commitHashs and return.
 //
-// return output and the err
-func ExecCommand(command string, dir string, isTermCmd bool) (string, error) {
+// return output, commitHashs, and err. If not commit hash exists, 
+// return empty array {} for commitHashs
+func ExecCommand(command string, dir string, isTermCmd bool) (output string, commitHashs []string, err error) {
 	// cmd := exec.Command("go", "run", "main.go", command)
 	// separate commands
 	re := regexp.MustCompile(`"(.*?)"|\S+`)
@@ -165,7 +180,7 @@ func ExecCommand(command string, dir string, isTermCmd bool) (string, error) {
 
 	outputByte, err := cmd.CombinedOutput()
 	if err != nil {
-		return string(outputByte), err
+		return string(outputByte), []string{}, err
 	}
 
 	outSentences := strings.Split(string(outputByte), "\n")
@@ -175,6 +190,8 @@ func ExecCommand(command string, dir string, isTermCmd bool) (string, error) {
 			if commitMsgArr := strings.Split(outSentences[i], ": "); len(commitMsgArr) > 1 {
 				// deal with "commit: hash" for commit cmd
 
+                commitHashs = append(commitHashs, commitMsgArr[1])
+
 				commitMsgArr[1] = "{HASH}"
 				outSentences[i] = strings.Join(commitMsgArr, ": ")
 			}
@@ -182,7 +199,7 @@ func ExecCommand(command string, dir string, isTermCmd bool) (string, error) {
 		outSentences[i] = strings.Trim(outSentences[i], " ")
 	}
 
-	output := strings.Join(outSentences, "")
+	output = strings.Join(outSentences, "")
 
-	return output, nil
+	return output, commitHashs, nil
 }

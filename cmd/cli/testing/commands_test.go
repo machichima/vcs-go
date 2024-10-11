@@ -38,3 +38,36 @@ func TestRm(t *testing.T) {
 
 	RunTestCases(dir, testCaseFile, t)
 }
+
+func TestCheckoutNoCommitFileExist(t *testing.T) {
+	// init test folder (init repo)
+	// create temp dir
+	testCaseFile := "./testCases/checkoutNoCommitFileExist.txt"
+
+	RunTestCases(dir, testCaseFile, t)
+
+}
+
+func TestCheckoutWithCommitFileExist(t *testing.T) {
+	// init test folder (init repo)
+	// create temp dir
+	testCaseFile := "./testCases/checkoutWithCommitFileExist.txt"
+
+	RunTestCases(dir, testCaseFile, t)
+}
+
+func TestCheckoutWithCommitNoFile(t *testing.T) {
+	// init test folder (init repo)
+	// create temp dir
+	testCaseFile := "./testCases/checkoutWithCommitNoFile.txt"
+
+	RunTestCases(dir, testCaseFile, t)
+}
+
+func TestCheckoutNoCommitMultiFiles(t *testing.T) {
+	// init test folder (init repo)
+	// create temp dir
+	testCaseFile := "./testCases/checkoutNoCommitMultiFiles.txt"
+
+	RunTestCases(dir, testCaseFile, t)
+}

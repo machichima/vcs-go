@@ -1,0 +1,103 @@
+> init
+<<<
+
+> status
+<<<
+Staged:
+
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
+test/test_3.txt  (new)
+test/test_4.txt  (new)
+> commit -m "add test/"
+<<<
+No staged changes
+> add test/
+<<<
+Index file does not exist, creating one new
+Files added successfully
+> status
+<<<
+Staged:
+test/test_3.txt  (new)
+test/test_4.txt  (new)
+
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
+
+> commit
+<<<
+Please provide the commit messages
+
+> commit -m "add test/"
+<<<
+
+> log
+<<<
+commit: {HASH}
+add test/
+
+> status
+<<<
+Staged:
+
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
+
+> add test_1.txt
+<<<
+Files added successfully
+
+> status
+<<<
+Staged:
+test_1.txt  (new)
+
+Modifications Not Staged For Commit:
+test_2.txt  (new)
+
+> commit -m "add test_1.txt"
+<<<
+
+> log
+<<<
+commit: {HASH}
+add test_1.txt
+
+commit: {HASH}
+add test/
+
+> status
+<<<
+Staged:
+
+Modifications Not Staged For Commit:
+test_2.txt  (new)
+
+> !echo "new content" ">" test/test_3.txt
+<<<
+
+> !cat test/test_3.txt
+<<<
+new content
+
+> !echo "new content" ">" test/test_4.txt
+<<<
+
+> !cat test/test_4.txt
+<<<
+new content
+
+> checkout -c {HASH_1}
+<<<
+
+> !cat test/test_3.txt
+<<<
+test/test_3.txt
+
+> !cat test/test_4.txt
+<<<
+test/test_4.txt
