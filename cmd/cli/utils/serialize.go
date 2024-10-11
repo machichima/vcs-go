@@ -3,7 +3,9 @@ package utils
 import (
 	"bytes"
 	"encoding/gob"
+	"errors"
 	"fmt"
+	"io"
 )
 
 type TestData struct {
@@ -45,7 +47,9 @@ func DeserializeBlob(buffer *bytes.Buffer) ([]byte, error) {
 	for {
 		err := decoder.Decode(&b)
 		if err != nil {
-			fmt.Println("Error in decoder", err)
+            if !errors.Is(err, io.EOF) {
+                fmt.Println("Error in decoder", err)
+            }
 			break
 		}
 	}
