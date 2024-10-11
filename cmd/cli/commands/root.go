@@ -103,7 +103,7 @@ var CheckoutSubCmd = &cli.Command{
 		} else {
 			return executeCheckout(
 				"",     // commit
-				c.Args().Slice()[1], // file
+				c.Args().First(), // file
 			)
 		}
 	},
