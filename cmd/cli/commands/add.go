@@ -33,8 +33,8 @@ func executeAdd(filePath string) error {
 	//   process
 	// Go through the staging process for staged files
 
-    // standarize the format of the filePath
-    filePath = filepath.Join(filePath)
+	// standarize the format of the filePath
+	filePath = filepath.Join(filePath)
 
 	var deletedFiles []string
 	stat, err := os.Stat(filePath)
@@ -66,7 +66,9 @@ func executeAdd(filePath string) error {
 	// (if not first commit)
 	isFirstCommit := false
 
-	commitHashByte, err := os.ReadFile(utils.HEADFileName)
+	// get head branch
+	headByte, err := os.ReadFile(utils.HEADFileName)
+	commitHashByte, err := os.ReadFile(filepath.Join(utils.RefsDirName, string(headByte)))
 	if err != nil {
 		if os.IsNotExist(err) {
 			isFirstCommit = true

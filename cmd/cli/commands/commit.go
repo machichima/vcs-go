@@ -1,9 +1,10 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
-    "errors"
-    "os"
+	"os"
+	"path/filepath"
 
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
@@ -39,8 +40,9 @@ func executeCommit(msg string) error {
         return nil
     }
 
+	headByte, err := os.ReadFile(utils.HEADFileName)
+	headCommitHash, err := os.ReadFile(filepath.Join(utils.RefsDirName, string(headByte)))
     // check if HEAD files exists and retrieve the previous commit hash
-    headCommitHash, err := os.ReadFile(utils.HEADFileName)
     if err != nil{
         if !os.IsNotExist(err) {
             return err
@@ -81,7 +83,7 @@ func executeCommit(msg string) error {
     }
 
     // update HEAD file
-    if err := os.WriteFile(utils.HEADFileName, []byte(commitHash), os.ModePerm); err != nil {
+    if err := utils.PointHEADToCommit(commitHash); err != nil {
         return err
     }
 

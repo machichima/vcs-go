@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"slices"
 
 	"github.com/machichima/vcs-go/cmd/cli/utils"
@@ -34,7 +35,8 @@ func executeStatus() error {
 
 	isFirstCommit := false
 
-	commitHashByte, err := os.ReadFile(utils.HEADFileName)
+	headByte, err := os.ReadFile(utils.HEADFileName)
+	commitHashByte, err := os.ReadFile(filepath.Join(utils.RefsDirName, string(headByte)))
 	if err != nil {
 		if os.IsNotExist(err) {
 			isFirstCommit = true

@@ -33,4 +33,5 @@ const (
 	ObjectsDirName = ".vgo/objects" // serialized blobs
 	IndexDirName   = ".vgo/index"   // For staging
 	HEADFileName   = ".vgo/HEAD"    // points to the current commit
+	RefsDirName    = ".vgo/refs"
 )

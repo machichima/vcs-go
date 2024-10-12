@@ -1,3 +1,9 @@
 > init
 <<<
-repository already initialized
+
+> !ls ./.vgo/
+<<<
+HEAD
+objects
+refs
+

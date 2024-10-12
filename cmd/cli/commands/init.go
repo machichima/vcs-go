@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
@@ -14,9 +15,15 @@ func executeInit() error {
         fmt.Println("repository already initialized")
 	}
 
-	if err := utils.CreateDirs(utils.RootDirName, utils.ObjectsDirName); err != nil {
+	if err := utils.CreateDirs(utils.RootDirName, utils.ObjectsDirName, utils.RefsDirName); err != nil {
 		return err
 	}
+
+    // create HEAD dir ref to main branch
+    HEADContent := "main"
+    if err := os.WriteFile(utils.HEADFileName, []byte(HEADContent), os.ModePerm); err != nil {
+        return err
+    }
 
 	// fmt.Println("Initialized empty vcs-go repository")
 

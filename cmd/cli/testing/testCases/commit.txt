@@ -10,13 +10,16 @@ test_1.txt  (new)
 test_2.txt  (new)
 test/test_3.txt  (new)
 test/test_4.txt  (new)
+
 > commit -m "add test/"
 <<<
 No staged changes
+
 > add test/
 <<<
 Index file does not exist, creating one new
 Files added successfully
+
 > status
 <<<
 Staged:
@@ -26,16 +29,23 @@ test/test_4.txt  (new)
 Modifications Not Staged For Commit:
 test_1.txt  (new)
 test_2.txt  (new)
+
 > commit
 <<<
 Please provide the commit messages
+
 > commit -m "add test/"
 <<<
+
+> !ls ./.vgo/refs
+<<<
+main
 
 > log
 <<<
 commit: {HASH}
 add test/
+
 > status
 <<<
 Staged:

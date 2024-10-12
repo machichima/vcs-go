@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
@@ -10,15 +11,15 @@ import (
 func executeLog() error {
 
 	// read the commit with hash in HEAD
-	headBytes, err := os.ReadFile(utils.HEADFileName)
+	headByte, err := os.ReadFile(utils.HEADFileName)
+	headCommitHash, err := os.ReadFile(filepath.Join(utils.RefsDirName, string(headByte)))
 	if err != nil {
 		return err
 	}
-	headCommitHash := string(headBytes)
 
 	// queue for going through whole commit history
 	queue := make([]string, 0)
-	queue = append(queue, headCommitHash)
+	queue = append(queue, string(headCommitHash))
 
 	for len(queue) > 0 {
 		hash := queue[0]
