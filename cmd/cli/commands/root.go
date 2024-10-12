@@ -106,9 +106,14 @@ var CheckoutSubCmd = &cli.Command{
             Aliases: []string{"f"},
 			Usage:       "files to checkout",
         },
+        &cli.StringFlag{
+			Name:        "branch",
+            Aliases: []string{"b"},
+			Usage:       "checkout branch",
+        },
 	},
 	Action: func(c *cli.Context) error {
-        return executeCheckout(commitHash, c.StringSlice("file"))
+        return executeCheckout(commitHash, c.StringSlice("file"), c.String("branch"))
 	},
 }
 

@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/machichima/vcs-go/cmd/cli/utils"
 )
@@ -22,16 +23,63 @@ import (
 //   - change branch (later)
 //
 // Note: one file only for usage with filename
-func executeCheckout(commitHash string, fileNames []string) error {
+func executeCheckout(commitHash string, fileNames []string, branchName string) error {
+
+	// checkout branch
+	if branchName != "" {
+
+        // check if branch is same as current
+        // if yes, return
+        currBranchByte, err := os.ReadFile(utils.HEADFileName)
+        if err != nil {
+            return err
+        }
+        if branchName == string(currBranchByte) {
+            fmt.Println("Already in branch ", branchName)
+            return nil
+        }
+
+
+        // check whether branch exist
+        branchFs, err := os.ReadDir(utils.RefsDirName)
+        if err != nil {
+            return err
+        }
+
+        var isBranchExist bool = false
+        for _, fs := range branchFs {
+            if fs.Name() == branchName {
+                isBranchExist = true
+                break
+            }
+        }
+
+        if isBranchExist {
+            // point HEAD to branch
+            if err := os.WriteFile(utils.HEADFileName, []byte(branchName), os.ModePerm); err != nil {
+                return err
+            }
+
+        }
+
+        // clear INDEX if switch
+        if err := os.WriteFile(utils.IndexDirName, []byte{}, os.ModePerm); err != nil {
+            return err
+        }
+
+		return nil
+	}
 
 	// no commit hash provided, use the HEAD
 	// get head commit
 	if commitHash == "" {
-		headbyte, err := os.ReadFile(utils.HEADFileName)
+		headPathByte, err := os.ReadFile(utils.HEADFileName)
+		headByte, err := os.ReadFile(filepath.Join(utils.RefsDirName, string(headPathByte)))
+
 		if err != nil {
 			return err
 		}
-		commitHash = string(headbyte)
+		commitHash = string(headByte)
 	}
 
 	commit, err := utils.ReadCommit(commitHash)
@@ -65,25 +113,25 @@ func executeCheckout(commitHash string, fileNames []string) error {
 
 	} else {
 		// filenames provided
-        for _, f := range fileNames {
+		for _, f := range fileNames {
 
-            hash := fileTree.FileToHash[f]
-            if hash == "" {
-                // fileName does not exist
-                return fmt.Errorf("error finding file %s in the previous commit", f)
-            }
+			hash := fileTree.FileToHash[f]
+			if hash == "" {
+				// fileName does not exist
+				return fmt.Errorf("error finding file %s in the previous commit", f)
+			}
 
-            // read committed content for the file
-            commitByte, err := utils.ReadFileBlobWithSerialize(hash)
-            if err != nil {
-                return err
-            }
+			// read committed content for the file
+			commitByte, err := utils.ReadFileBlobWithSerialize(hash)
+			if err != nil {
+				return err
+			}
 
-            // write committed content to the workspace
-            if err := os.WriteFile(f, []byte(commitByte), os.ModePerm); err != nil {
-                return err
-            }
-        }
+			// write committed content to the workspace
+			if err := os.WriteFile(f, []byte(commitByte), os.ModePerm); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil

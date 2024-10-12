@@ -1,0 +1,113 @@
+> init
+<<<
+
+> branch
+<<<
+*main
+
+> branch new
+<<<
+
+> branch
+<<<
+*main
+new
+
+
+> add test/
+<<<
+Index file does not exist, creating one new
+Files added successfully
+
+> status
+<<<
+Staged:
+test/test_3.txt  (new)
+test/test_4.txt  (new)
+
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
+
+> commit -m "add test/"
+<<<
+
+> log
+<<<
+commit: {HASH}
+add test/
+
+> status
+<<<
+Staged:
+
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
+
+> checkout -b new
+<<<
+
+> branch
+<<<
+main
+*new
+
+
+> add test_1.txt
+<<<
+Files added successfully
+
+> status
+<<<
+Staged:
+test_1.txt  (new)
+
+Modifications Not Staged For Commit:
+test_2.txt  (new)
+test/test_3.txt  (new)
+test/test_4.txt  (new)
+
+> commit -m "add test_1.txt"
+<<<
+
+> log
+<<<
+commit: {HASH}
+add test_1.txt
+
+> add test_2.txt
+<<<
+Files added successfully
+
+> status
+<<<
+Staged:
+test_2.txt  (new)
+
+Modifications Not Staged For Commit:
+test/test_3.txt  (new)
+test/test_4.txt  (new)
+
+
+> checkout -b main
+<<<
+
+> branch
+<<<
+*main
+new
+
+> log
+<<<
+commit: {HASH}
+add test/
+
+> status
+<<<
+Staged:
+
+Modifications Not Staged For Commit:
+test_1.txt  (new)
+test_2.txt  (new)
+

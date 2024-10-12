@@ -82,3 +82,9 @@ func TestBranchOpera(t *testing.T) {
 
 	RunTestCases(dir, testCaseFile, t)
 }
+
+func TestSwitchBranch(t *testing.T) {
+	testCaseFile := "./testCases/switchBranch.txt"
+
+	RunTestCases(dir, testCaseFile, t)
+}
