@@ -7,6 +7,13 @@ import (
 const CommandPrefix string = "go run ../main.go"
 const dir string = "./testfolder/"
 
+
+func TestInit(t *testing.T) {
+	testCaseFile := "./testCases/init.txt"
+
+	RunTestCases(dir, testCaseFile, t)
+}
+
 func TestAddOneFile(t *testing.T) {
 	// init test folder (init repo)
 	// create temp dir
@@ -65,9 +72,13 @@ func TestCheckoutWithCommitNoFile(t *testing.T) {
 }
 
 func TestCheckoutNoCommitMultiFiles(t *testing.T) {
-	// init test folder (init repo)
-	// create temp dir
 	testCaseFile := "./testCases/checkoutNoCommitMultiFiles.txt"
+
+	RunTestCases(dir, testCaseFile, t)
+}
+
+func TestBranchOpera(t *testing.T) {
+	testCaseFile := "./testCases/createAndDeleteBranch.txt"
 
 	RunTestCases(dir, testCaseFile, t)
 }

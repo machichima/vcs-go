@@ -1,0 +1,22 @@
+> init
+<<<
+
+> branch
+<<<
+*main
+
+> branch new
+<<<
+
+> branch
+<<<
+*main
+new
+
+> branch -d new
+<<<
+new branch deleted
+
+> branch
+<<<
+*main
