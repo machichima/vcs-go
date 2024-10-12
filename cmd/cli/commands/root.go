@@ -108,20 +108,5 @@ var CheckoutSubCmd = &cli.Command{
 	},
 	Action: func(c *cli.Context) error {
         return executeCheckout(commitHash, c.StringSlice("file"))
-		// if c.Args().Len() > 2 {
-		// 	return errors.New("Can only provide one commit and one filename")
-		// }
-		// if c.Args().Len() > 1 {
-		// 	// have commit and files
-		// 	return executeCheckout(
-		// 		c.Args().First(),    // commit
-		// 		c.Args().Slice()[1], // file
-		// 	)
-		// } else {
-		// 	return executeCheckout(
-		// 		"",               // commit
-		// 		c.Args().First(), // file
-		// 	)
-		// }
 	},
 }
