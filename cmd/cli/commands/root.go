@@ -21,6 +21,7 @@ func ExecuteCommands() {
 			LogSubCmd,
 			RmSubCmd,
 			CheckoutSubCmd,
+            BranchSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -108,5 +109,20 @@ var CheckoutSubCmd = &cli.Command{
 	},
 	Action: func(c *cli.Context) error {
         return executeCheckout(commitHash, c.StringSlice("file"))
+	},
+}
+
+var BranchSubCmd = &cli.Command{
+	Name:  "branch",
+	Usage: "create new branches",
+	Flags: []cli.Flag{
+        &cli.BoolFlag{
+			Name:        "delete",
+            Aliases: []string{"d"},
+			Usage:       "delete branch",
+        },
+	},
+	Action: func(c *cli.Context) error {
+        return executeBranch(c.Args().First(), c.Bool("delete"))
 	},
 }
