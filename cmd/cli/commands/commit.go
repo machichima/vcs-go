@@ -52,7 +52,7 @@ func executeCommit(msg string) error {
     // if headCommitHash != nil, read the previous filetree
     // and merge with the current one
     newFileTree := index
-    if headCommitHash != nil {
+    if string(headCommitHash) != "" {
         prevCommit, err := utils.ReadCommit(string(headCommitHash))
         if err != nil {
             return err

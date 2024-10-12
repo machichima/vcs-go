@@ -70,11 +70,10 @@ func executeAdd(filePath string) error {
 	headByte, err := os.ReadFile(utils.HEADFileName)
 	commitHashByte, err := os.ReadFile(filepath.Join(utils.RefsDirName, string(headByte)))
 	if err != nil {
-		if os.IsNotExist(err) {
-			isFirstCommit = true
-		} else {
-			return err
-		}
+		return err
+	}
+	if string(commitHashByte) == "" {
+		isFirstCommit = true
 	}
 
 	// Get the committed filetree

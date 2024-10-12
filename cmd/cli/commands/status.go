@@ -38,12 +38,11 @@ func executeStatus() error {
 	headByte, err := os.ReadFile(utils.HEADFileName)
 	commitHashByte, err := os.ReadFile(filepath.Join(utils.RefsDirName, string(headByte)))
 	if err != nil {
-		if os.IsNotExist(err) {
-			isFirstCommit = true
-		} else {
-			return err
-		}
+		return err
 	}
+    if string(commitHashByte) == "" {
+        isFirstCommit = true
+    }
 
 	var modifiedFiles []string
 	var newFiles []string
@@ -59,7 +58,7 @@ func executeStatus() error {
 	}
 
 	// Go through the filetree of prev commit
-    var fileTree utils.Index
+	var fileTree utils.Index
 	if !isFirstCommit {
 		commitHash := string(commitHashByte)
 
@@ -93,13 +92,13 @@ func executeStatus() error {
 	// new or modified
 	for _, file := range files {
 
-        var fileStatus int = utils.NewFile
-        if !isFirstCommit {
-            fileStatus, err = utils.CompareFileToFileTree(file, fileTree)
-            if err != nil {
-                return err
-            }
-        }
+		var fileStatus int = utils.NewFile
+		if !isFirstCommit {
+			fileStatus, err = utils.CompareFileToFileTree(file, fileTree)
+			if err != nil {
+				return err
+			}
+		}
 
 		// file is staged
 		if _, ok := index.FileToHash[file]; ok {
