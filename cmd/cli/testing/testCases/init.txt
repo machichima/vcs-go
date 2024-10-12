@@ -7,3 +7,6 @@ HEAD
 objects
 refs
 
+> !ls ./.vgo/refs/
+<<<
+main
