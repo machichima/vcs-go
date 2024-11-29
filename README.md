@@ -126,14 +126,21 @@ go test github.com/machichima/vcs-go/cmd/cli/utils -v -run function
     - [x] log
 - [x] rm
 - [x] checkout
-- [ ] branch
-- [ ] branch -d (delete branch)
+    - [x] checkout branch
+- [x] branch
+- [x] branch -d (delete branch)
 - [ ] merge
 - [ ] remote option ...
 
 ## Work Log
 
+### 12/10/2024
+- [x] Finish create branch: `branch`
+- [x] Finish delete branch: `branch -d`
+- [x] Finish checkout branch
+
 ### 11/10/2024
+- [x] Finish `checkout` command
 - [x] Finish tests for `checkout`
 
 ### 07/10/2024

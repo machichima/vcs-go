@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -22,6 +23,7 @@ func ExecuteCommands() {
 			RmSubCmd,
 			CheckoutSubCmd,
             BranchSubCmd,
+            MergeSubCmd,
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -129,5 +131,20 @@ var BranchSubCmd = &cli.Command{
 	},
 	Action: func(c *cli.Context) error {
         return executeBranch(c.Args().First(), c.Bool("delete"))
+	},
+}
+
+var MergeSubCmd = &cli.Command{
+	Name:  "merge",
+	Usage: "merge current branch to target branch",
+	Action: func(c *cli.Context) error {
+        if c.Args().Len() < 1 {
+            return errors.New("Please provide target branch to merge")
+        }
+        if c.Args().Len() > 1 {
+            return errors.New("Too many arguments. Only one target branch needed")
+        }
+		targetBranch := c.Args().First()
+		return executeMerge(targetBranch)
 	},
 }

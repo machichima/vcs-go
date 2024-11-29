@@ -28,38 +28,16 @@ func executeCheckout(commitHash string, fileNames []string, branchName string) e
 	// checkout branch
 	if branchName != "" {
 
-        // check if branch is same as current
-        // if yes, return
-        currBranchByte, err := os.ReadFile(utils.HEADFileName)
-        if err != nil {
-            return err
-        }
-        if branchName == string(currBranchByte) {
+        if utils.CheckCurrBranch(branchName) {
             fmt.Println("Already in branch ", branchName)
             return nil
         }
 
-
-        // check whether branch exist
-        branchFs, err := os.ReadDir(utils.RefsDirName)
-        if err != nil {
-            return err
-        }
-
-        var isBranchExist bool = false
-        for _, fs := range branchFs {
-            if fs.Name() == branchName {
-                isBranchExist = true
-                break
-            }
-        }
-
-        if isBranchExist {
+        if utils.CheckBranchExist(branchName) {
             // point HEAD to branch
             if err := os.WriteFile(utils.HEADFileName, []byte(branchName), os.ModePerm); err != nil {
                 return err
             }
-
         }
 
         // clear INDEX if switch
